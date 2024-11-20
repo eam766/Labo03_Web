@@ -3,7 +3,7 @@
     <v-img :width="500" :height="220" src="/src/img/web/logov23749802.png" />
     <nav>
       <a href="">Accueil</a>
-      <a href="">Produits</a>
+      <a href="./catalogueProduits">Produits</a>
       <a href="">Infolettre</a>
     </nav>
   </header>
