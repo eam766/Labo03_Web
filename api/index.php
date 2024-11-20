@@ -27,10 +27,16 @@ switch ($method | $uri) {
         echo json_encode($produits);
         break;
 
+    case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/produits\/[1-9]/', $uri)):
+        $id = end($segments);
+        $produit = $controllerProduit->getProduitById($id);
+        echo json_encode($produit);
+        break;
+
     case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/abonnements'):
         $data = $_POST;
-        $result = $controllerAbonnement->createAbonnement($data['courriel']);
-        if ($result) {
+        $produit = $controllerAbonnement->createAbonnement($data['courriel']);
+        if ($produit) {
             echo json_encode(["success" => true, "message" => "Abonnement créé avec succès"]);
         } else {
             echo json_encode(["success" => false, "message" => "Échec de la création de l'abonnement"]);
@@ -39,8 +45,8 @@ switch ($method | $uri) {
 
     case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/utilisateurs'):
         $data = $_POST;
-        $result = $controllerUtilisateur->createUtilisateur($data['nom'], $data['prenom'], $data['password'], $data['courriel']);
-        if ($result) {
+        $produit = $controllerUtilisateur->createUtilisateur($data['nom'], $data['prenom'], $data['password'], $data['courriel']);
+        if ($produit) {
             echo json_encode(["success" => true, "message" => "Utilisateur créé avec succès"]);
         } else {
             echo json_encode(["success" => false, "message" => "Échec de la création de l'utilisateur"]);
@@ -51,8 +57,8 @@ switch ($method | $uri) {
         $id = end($segments);
         parse_str(file_get_contents('php://input'), $_PUT);
         $data = $_PUT;
-        $result = $controllerUtilisateur->updateUtilisateur($id, $data['nom'], $data['prenom'], $data['password'], $data['courriel']);
-        if ($result) {
+        $produit = $controllerUtilisateur->updateUtilisateur($id, $data['nom'], $data['prenom'], $data['password'], $data['courriel']);
+        if ($produit) {
             echo json_encode(["success" => true, "message" => "Les données de l'utilisateur #{$id} ont été mise à jour"]);
         } else {
             echo json_encode(["success" => false, "message" => "Échec de la mise à jour de l'utilisateur"]);
