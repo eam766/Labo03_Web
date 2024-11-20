@@ -53,9 +53,9 @@ class ProduitController
     public function getProduitById($id){
         return $this->model->getProduitById($id);
     }
-    public function createProduit($type, $nom, $image, $description, $prix, $taille, $couleur)
+    public function createProduit($type, $nom, $image, $description, $prix, $couleur)
     {
-        return $this->model->createProduit($type, $nom, $image, $description, $prix, $taille, $couleur);
+        return $this->model->createProduit($type, $nom, $image, $description, $prix, $couleur);
 
     }
     public function getProduitsExclusifs(){
@@ -64,10 +64,26 @@ class ProduitController
     public function getProduitsSummerCollection(){
         return $this->model->getProduitsSummerCollection();
     }
-    public function updateProduit($id, $type, $nom, $image, $description, $prix, $taille, $couleur){
-        return $this->model->updateProduit($id, $type, $nom, $image,$description,$prix,$taille, $couleur);
+    public function updateProduit($id, $type, $nom, $image, $description, $prix, $couleur){
+        return $this->model->updateProduit($id, $type, $nom, $image,$description,$prix, $couleur);
     }
     public function deleteProduit($id){
         return $this->model->deleteProduit($id);
+    }
+
+    public function getTaille($id){
+        return $this->model->getTaille($id);
+    }
+
+    public function getAllQuantity(){
+        return $this->model->getAllQuantity();
+    }
+
+    public function updateQuantity($id, $quantity){
+        return $this->model->updateQuantity($id, $quantity);
+    }
+
+    public function getQuantityByIdProduct($idProduct){
+        return $this->model->getQuantityByIdProduct($idProduct);
     }
 }
