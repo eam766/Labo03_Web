@@ -22,12 +22,12 @@ $controllerUtilisateur = new UtilisateurController($conn);
 $segments = explode('/', $uri);
 
 switch ($method | $uri) {
-    case ($method == 'GET' && $uri == '/api/produits'):
+    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produits'):
         $produits = $controllerProduit->getAllProduits();
         echo json_encode($produits);
         break;
 
-    case ($method == 'POST' && $uri == '/api/abonnements'):
+    case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/abonnements'):
         $data = $_POST;
         $result = $controllerAbonnement->createAbonnement($data['courriel']);
         if ($result) {
@@ -37,7 +37,7 @@ switch ($method | $uri) {
         }
         break;
 
-    case ($method == 'POST' && $uri == '/api/utilisateurs'):
+    case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/utilisateurs'):
         $data = $_POST;
         $result = $controllerUtilisateur->createUtilisateur($data['nom'], $data['prenom'], $data['password'], $data['courriel']);
         if ($result) {
@@ -47,7 +47,7 @@ switch ($method | $uri) {
         }
         break;
 
-    case ($method == 'PUT' && preg_match('/\/api\/utilisateurs\/[1-9]/', $uri)):
+    case ($method == 'PUT' && preg_match('/\/Labo3_Web_EA_AV\/api\/utilisateurs\/[1-9]/', $uri)):
         $id = end($segments);
         parse_str(file_get_contents('php://input'), $_PUT);
         $data = $_PUT;
@@ -59,7 +59,7 @@ switch ($method | $uri) {
         }
         break;
 
-    case ($method == 'GET' && preg_match('/\/api\/utilisateurs\/[1-9]/', $uri)):  
+    case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/utilisateurs\/[1-9]/', $uri)):  
         $id = end($segments);
         $utilisateur = $controllerUtilisateur->getUtilisateurById($id);
         echo json_encode($utilisateur);
