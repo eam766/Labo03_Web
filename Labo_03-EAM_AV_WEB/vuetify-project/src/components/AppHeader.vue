@@ -4,7 +4,7 @@
     <nav>
       <a href="">Accueil</a>
       <a href="./catalogueProduits">Produits</a>
-      <a href="">Infolettre</a>
+      <a href="./infolettre">Infolettre</a>
     </nav>
   </header>
 </template>
