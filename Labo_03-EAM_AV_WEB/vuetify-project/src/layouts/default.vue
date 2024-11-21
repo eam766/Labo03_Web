@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <AppHeader />
-    <v-main class=".container">
+    <v-main>
       <router-view />
     </v-main>
     <AppFooter />
@@ -16,6 +16,7 @@ import AppHeader from "@/components/AppHeader.vue";
 <style>
 .v-application {
   background-color: rgba(58, 5, 72, 0.6) !important;
+  width: 1000px;
 }
 html,
 body {
