@@ -2,6 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-type: application/json");
 
+
 require_once 'Controllers/AbonnementController.php';
 require_once 'Controllers/ProduitController.php';
 require_once 'Controllers/UtilisateurController.php';
@@ -33,15 +34,39 @@ switch ($method | $uri) {
         echo json_encode($produit);
         break;
 
-    case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/abonnements'):
-        $data = $_POST;
-        $produit = $controllerAbonnement->createAbonnement($data['courriel']);
-        if ($produit) {
-            echo json_encode(["success" => true, "message" => "Abonnement créé avec succès"]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Échec de la création de l'abonnement"]);
-        }
+    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/abonnements'):
+        $abonnements = $controllerAbonnement->getAllAbonnements();
+        echo json_encode($abonnements);
         break;
+
+        case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/abonnements'):
+            $data = json_decode(file_get_contents('php://input'), true); // Récupérer les données JSON
+            $courriel = $data['courriel'] ?? null;
+        
+            if (!$courriel) {
+                echo json_encode(["success" => false, "message" => "Courriel requis."]);
+                http_response_code(400);
+                break;
+            }
+        
+            // Vérifier si le courriel existe déjà
+            $existingAbonnement = $controllerAbonnement->getAbonnement($courriel);
+            if (!empty($existingAbonnement)) {
+                echo json_encode(["success" => false, "message" => "Courriel déjà inscrit."]);
+                http_response_code(409); // Code HTTP 409: Conflit
+                break;
+            }
+        
+            // Ajouter le courriel
+            $produit = $controllerAbonnement->createAbonnement($courriel);
+            if ($produit) {
+                echo json_encode(["success" => true, "message" => "Abonnement créé avec succès"]);
+            } else {
+                echo json_encode(["success" => false, "message" => "Échec de la création de l'abonnement"]);
+                http_response_code(500); // Code HTTP 500: Erreur serveur
+            }
+            break;
+        
 
     case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/utilisateurs'):
         $data = $_POST;

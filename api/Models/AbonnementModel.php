@@ -9,7 +9,7 @@ class AbonnementModel {
     }
 
     public function getAllAbonnements() {
-        $sql = "SELECT * FROM `abonnement`;";
+        $sql = "SELECT * FROM `abonnements`;";
         $result = $this->db->query($sql);
         return $result->fetchAll(PDO::FETCH_ASSOC);
 
