@@ -20,23 +20,30 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="listeProduits">
-    <ProductCard
-      v-for="produit in produits"
-      :key="produit.id"
-      :produit="produit"
-    />
-  </div>
+  <v-container class="pa-4" fluid>
+    <v-row justify="center" .align="center" class="g-4">
+      <v-col
+        v-for="produit in produits"
+        :key="produit.id"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
+        <ProductCard :produit="produit" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
-<style>
+<!-- <style>
 .listeProduits {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   width: 95%;
   margin: 0 auto;
-  justify-content: center;
+  justify-content: center !important;
   align-items: center;
 }
-</style>
+</style> -->

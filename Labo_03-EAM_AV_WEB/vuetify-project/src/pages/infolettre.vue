@@ -8,9 +8,9 @@
         height="260"
       />
       <div class="infolettre">
-        <div id="confirmation">
+        <!-- <div id="confirmation">
           <p>if isset $_SESSION confirmation?</p>
-        </div>
+        </div> -->
 
         <br />
         <p id="lettrePlusGrande">INSCRIS-TOI À NOTRE INFOLETTRE!</p>
@@ -24,13 +24,11 @@
           action="php/Forms/inscriptionInfolettre.php"
           method="POST"
         >
-          <p class="error"></p>
           <input
             id="email"
             name="email"
             type="text"
             placeholder="ADRESSE EMAIL"
-            value="$_SESSION['old']['email'] ?? '';"
           />
           <input id="button" type="submit" value="S'INSCRIRE" />
         </form>
@@ -149,6 +147,11 @@ a {
   padding-left: 10px;
 }
 
+input {
+  background-color: white;
+  color: black;
+}
+
 input:hover {
   cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
 }
@@ -172,8 +175,20 @@ input:hover {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+p {
+  text-align: center;
+}
+
 #button:hover {
   box-shadow: 2px 2px black;
   cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh; /* S'assurer qu'il occupe tout l'écran */
 }
 </style>
