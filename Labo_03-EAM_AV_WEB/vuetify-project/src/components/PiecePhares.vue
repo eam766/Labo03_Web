@@ -2,7 +2,8 @@
 import ProductCard from "@/components/ProductCard.vue";
 import { ref, onMounted } from "vue";
 
-const URL = "http://localhost:4208/Labo3_Web_EA_AV/api/produits";
+const URL =
+  "http://localhost:4208/Labo3_Web_EA_AV/api/produitsSummerCollection";
 let produits = ref([]);
 onMounted(() => {
   fetch(URL)
@@ -27,8 +28,8 @@ onMounted(() => {
         :key="produit.id"
         cols="12"
         sm="6"
-        md="4"
-        lg="3"
+        md="3"
+        lg="4"
       >
         <ProductCard :key="produit.id" :produit="produit" />
       </v-col>

@@ -27,6 +27,16 @@ switch ($method | $uri) {
         $produits = $controllerProduit->getAllProduits();
         echo json_encode($produits);
         break;
+    
+    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produitsExclusifs'):
+        $produits = $controllerProduit->getProduitsExclusifs();
+        echo json_encode($produits);
+        break;
+    
+    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produitsSummerCollection'):
+        $produits = $controllerProduit->getProduitsSummerCollection();
+        echo json_encode($produits);
+        break;
 
     case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/produits\/[1-9]/', $uri)):
         $id = end($segments);
