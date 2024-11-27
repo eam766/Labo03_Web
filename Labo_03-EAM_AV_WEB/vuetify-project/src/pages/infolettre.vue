@@ -218,7 +218,7 @@ p {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 70vh; /* S'assurer qu'il occupe tout l'écran */
+  height: 70vh;
 }
 
 .success {
