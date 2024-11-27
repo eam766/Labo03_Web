@@ -1,6 +1,13 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Méthodes autorisées
+header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Headers autorisés
 header("Content-type: application/json");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 
 require_once 'Controllers/AbonnementController.php';
@@ -50,7 +57,7 @@ switch ($method | $uri) {
         break;
 
     case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/abonnements'):
-        $data = $_POST;
+        $data = json_decode(file_get_contents('php://input'), true);
         $courriel = $controllerAbonnement->createAbonnement($data['courriel']);
         if ($courriel) {
             echo json_encode(["success" => true, "message" => "Abonnement créé avec succès"]);

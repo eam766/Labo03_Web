@@ -1,4 +1,32 @@
-<script></script>
+<script>
+export default {
+  data() {
+    return {
+      courriel: "",
+    };
+  },
+  methods: {
+    async submitForm() {
+      try {
+        const response = await fetch(
+          "http://localhost:4208/Labo3_Web_EA_AV/api/abonnements",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ courriel: this.courriel }),
+          }
+        );
+
+        console.log("Réponse du serveur :", await response.json());
+      } catch (error) {
+        console.error("Erreur lors de l'envoi :", error);
+      }
+    },
+  },
+};
+</script>
 
 <template>
   <div class="container">
@@ -11,26 +39,18 @@
       />
       <div class="infolettre">
         <p id="lettrePlusGrande">INSCRIS-TOI À NOTRE INFOLETTRE!</p>
-        <P
-          >REÇOIS UN ACCÈS EXCLUSIF POUR NOS NOUVEAUTÉS AINSI QUE DES RABAIS
-          SURPRISE</P
-        >
-        <v-form
-          v-model="valid"
-          class="d-flex align-center"
-          @submit.prevent="submitForm"
-        >
+        <p>
+          REÇOIS UN ACCÈS EXCLUSIF POUR NOS NOUVEAUTÉS AINSI QUE DES RABAIS
+          SURPRISE
+        </p>
+        <v-form @submit.prevent="submitForm">
           <v-text-field
             v-model="courriel"
-            :rules="courrielRules"
             label="Courriel"
-            required
             class="flex-grow-1"
           ></v-text-field>
-
           <v-btn class="ml-2" type="submit" color="primary">S'INSCRIRE</v-btn>
         </v-form>
-        <p v-if="message" class="message">{{ message }}</p>
       </div>
       <img
         src="/src/img/produits/tie7.webp"
