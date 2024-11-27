@@ -3,10 +3,43 @@ export default {
   data() {
     return {
       courriel: "",
+      boolValide: false,
+      emailRules: [
+        (value) => {
+          if (value) return true;
+
+          return "E-mail is required.";
+        },
+        (value) => {
+          if (/.+@.+\..+/.test(value)) return true;
+
+          return "E-mail must be valid.";
+        },
+      ],
     };
   },
+  watch: {
+    courriel(value) {
+      this.isValide(); // Appelle la validation à chaque changement de courriel
+    },
+  },
   methods: {
+    isValide() {
+      // Vérifie si le courriel est valide
+      const pattern =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!this.courriel || !pattern.test(this.courriel)) {
+        this.boolValide = false; // Désactive le bouton si le courriel est invalide
+      } else {
+        this.boolValide = true; // Active le bouton si tout est correct
+      }
+    },
     async submitForm() {
+      if (!this.boolValide) {
+        console.error("Formulaire invalide.");
+        return; // Stoppe la soumission si le formulaire est invalide
+      }
+
       try {
         const response = await fetch(
           "http://localhost:4208/Labo3_Web_EA_AV/api/abonnements",
@@ -19,7 +52,14 @@ export default {
           }
         );
 
-        console.log("Réponse du serveur :", await response.json());
+        const result = await response.json();
+        console.log("Réponse du serveur :", result);
+
+        if (response.ok) {
+          alert("Vous êtes inscrit !");
+          this.courriel = ""; // Réinitialise le champ
+          this.boolValide = false; // Réinitialise le bouton
+        }
       } catch (error) {
         console.error("Erreur lors de l'envoi :", error);
       }
@@ -46,11 +86,20 @@ export default {
         <v-form @submit.prevent="submitForm">
           <v-text-field
             v-model="courriel"
+            :rules="emailRules"
             label="Courriel"
             class="flex-grow-1"
           ></v-text-field>
-          <v-btn class="ml-2" type="submit" color="primary">S'INSCRIRE</v-btn>
+          <v-btn
+            :disabled="!boolValide"
+            class="ml-2"
+            type="submit"
+            color="primary"
+            >S'INSCRIRE</v-btn
+          >
         </v-form>
+        <p v-if="successMessage" class="success">{{ successMessage }}</p>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </div>
       <img
         src="/src/img/produits/tie7.webp"
@@ -170,5 +219,15 @@ p {
   align-items: center;
   justify-content: center;
   height: 70vh; /* S'assurer qu'il occupe tout l'écran */
+}
+
+.success {
+  color: green;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
 }
 </style>
