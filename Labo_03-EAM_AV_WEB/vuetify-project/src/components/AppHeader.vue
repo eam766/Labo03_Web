@@ -1,5 +1,9 @@
 <template>
   <header>
+    <div id="connexion">
+      <span class="mdi mdi-account-circle-outline"></span>
+      <input id="buttonDeconnexion" type="submit" value="DECONNEXION" />
+    </div>
     <v-img :width="500" :height="220" src="/src/img/web/logov23749802.png" />
     <nav>
       <a href="./">Accueil</a>
@@ -9,7 +13,7 @@
   </header>
 </template>
 
-<style>
+<style scoped>
 header {
   display: flex;
   flex-direction: column;
@@ -17,6 +21,41 @@ header {
   width: 100%;
   margin: 0px;
   padding: 0px;
+}
+
+#connexion {
+  display: flex;
+  align-self: end;
+  margin-right: 15px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.mdi {
+  color: #b967ff;
+  align-self: end;
+  font-size: 30px !important;
+  margin-right: 10px;
+  text-decoration: none;
+}
+
+#buttonDeconnexion {
+  height: 34px;
+  width: 120px;
+  margin-left: 10px;
+  background-color: #b967ff;
+  border-radius: 8px;
+  border: 2px solid black;
+  box-shadow: 6px 6px black;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: black;
+}
+
+#buttonDeconnexion:hover {
+  box-shadow: 2px 2px black;
+  cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
 }
 
 nav {
