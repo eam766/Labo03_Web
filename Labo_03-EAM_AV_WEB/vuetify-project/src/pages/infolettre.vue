@@ -4,22 +4,23 @@ export default {
     return {
       courriel: "",
       boolValide: false,
+      successMessage: "",
       emailRules: [
         (value) => {
           if (value) return true;
 
-          return "E-mail is required.";
+          return "Courriel requis.";
         },
         (value) => {
           if (/.+@.+\..+/.test(value)) return true;
 
-          return "E-mail must be valid.";
+          return "Le courriel doit être valide.";
         },
       ],
     };
   },
   watch: {
-    courriel(value) {
+    courriel() {
       this.isValide(); // Appelle la validation à chaque changement de courriel
     },
   },
@@ -56,7 +57,7 @@ export default {
         console.log("Réponse du serveur :", result);
 
         if (response.ok) {
-          alert("Vous êtes inscrit !");
+          this.successMessage = "Inscription reussi";
           this.courriel = ""; // Réinitialise le champ
           this.boolValide = false; // Réinitialise le bouton
         }
@@ -85,6 +86,7 @@ export default {
         </p>
         <v-form @submit.prevent="submitForm">
           <v-text-field
+            clearable
             v-model="courriel"
             :rules="emailRules"
             label="Courriel"
@@ -98,8 +100,8 @@ export default {
             >S'INSCRIRE</v-btn
           >
         </v-form>
-        <p v-if="successMessage" class="success">{{ successMessage }}</p>
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <p class="success">{{ successMessage }}</p>
+        <p v-if="!boolValide" class="error">{{ errorMessage }}</p>
       </div>
       <img
         src="/src/img/produits/tie7.webp"
