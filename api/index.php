@@ -67,7 +67,7 @@ switch ($method | $uri) {
         break;
 
     case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/utilisateurs'):
-        $data = $_POST;
+        $data = json_decode(file_get_contents('php://input'), true);
         $produit = $controllerUtilisateur->createUtilisateur($data['nom'], $data['prenom'], $data['password'], $data['courriel']);
         if ($produit) {
             echo json_encode(["success" => true, "message" => "Utilisateur créé avec succès"]);
