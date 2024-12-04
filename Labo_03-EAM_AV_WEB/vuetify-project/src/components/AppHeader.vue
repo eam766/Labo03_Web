@@ -8,9 +8,9 @@
     </div>
     <v-img :width="500" :height="220" src="/src/img/web/logov23749802.png" />
     <nav>
-      <a href="./">Accueil</a>
-      <a href="./catalogueProduits">Produits</a>
-      <a href="./infolettre">Infolettre</a>
+      <router-link to="/">Accueil</router-link>
+      <router-link to="/catalogueProduits">Produits</router-link>
+      <router-link to="/infolettre">Infolettre</router-link>
     </nav>
   </header>
 </template>
