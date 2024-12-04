@@ -8,13 +8,15 @@ const { produit } = defineProps({
 </script>
 
 <template>
-  <v-card class="produit">
-    <v-img :width="250" :height="280" :src="produit.image" />
-    <v-card-title class="description realistic-marker-highlight">{{
-      produit.nom
-    }}</v-card-title>
-    <v-card-subtitle>{{ produit.prix + "$" }}</v-card-subtitle>
-  </v-card>
+  <router-link :to="`/produit/${produit.id}`">
+    <v-card class="produit">
+      <v-img :width="250" :height="280" :src="produit.image" />
+      <v-card-title class="description realistic-marker-highlight">{{
+        produit.nom
+      }}</v-card-title>
+      <v-card-subtitle>{{ produit.prix + "$" }}</v-card-subtitle>
+    </v-card>
+  </router-link>
 </template>
 
 <style scoped>

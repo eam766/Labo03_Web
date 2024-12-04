@@ -34,6 +34,7 @@ html {
 
 a {
   cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
+  text-decoration: none;
 }
 
 body {
