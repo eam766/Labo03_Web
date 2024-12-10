@@ -62,6 +62,15 @@ switch ($method | $uri) {
         echo json_encode($abonnements);
         break;
 
+    case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/abonnements\/(.+)/', $uri)):
+        // Récupérer le courriel depuis l'URI
+        $courriel = urldecode(end($segments));
+        $abonnement = $controllerAbonnement->getAbonnement($courriel);
+        // Si le courriel existe, retourne l'abonnement, sinon un tableau vide
+        echo json_encode($abonnement ? [$abonnement] : []);
+        break;
+        
+
     case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/abonnements'):
         $data = json_decode(file_get_contents('php://input'), true);
         $courriel = $controllerAbonnement->createAbonnement($data['courriel']);
