@@ -47,8 +47,8 @@ switch ($method | $uri) {
 
     case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/produits\/[1-9]/', $uri)):
         $id = end($segments);
-        $produit = $controllerProduit->getProduitById($id);
-        echo json_encode($produit);
+        $utilisateur = $controllerProduit->getProduitById($id);
+        echo json_encode($utilisateur);
         break;
 
     case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/quantityProduits\/[1-9]/', $uri)):
@@ -74,11 +74,23 @@ switch ($method | $uri) {
 
     case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/utilisateurs'):
         $data = json_decode(file_get_contents('php://input'), true);
-        $produit = $controllerUtilisateur->createUtilisateur($data['nom'], $data['prenom'], $data['password'], $data['courriel']);
-        if ($produit) {
+        $utilisateur = $controllerUtilisateur->createUtilisateur($data['nom'], $data['prenom'], $data['password'], $data['courriel']);
+        if ($utilisateur) {
             echo json_encode(["success" => true, "message" => "Utilisateur créé avec succès"]);
         } else {
             echo json_encode(["success" => false, "message" => "Échec de la création de l'utilisateur"]);
+        }
+        break;
+    
+    case ($method == 'POST' && $uri == '/Labo3_Web_EA_AV/api/login'):
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if(!empty($data['courriel']) && !empty($data['password'])){
+            $response = $controllerUtilisateur->login($data['courriel'], $data['password']);
+            echo json_encode($response);
+        } else {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Courriel et mot de passe requis"]);
         }
         break;
 
@@ -86,8 +98,8 @@ switch ($method | $uri) {
         $id = end($segments);
         parse_str(file_get_contents('php://input'), $_PUT);
         $data = $_PUT;
-        $produit = $controllerUtilisateur->updateUtilisateur($id, $data['nom'], $data['prenom'], $data['password'], $data['courriel']);
-        if ($produit) {
+        $utilisateur = $controllerUtilisateur->updateUtilisateur($id, $data['nom'], $data['prenom'], $data['password'], $data['courriel']);
+        if ($utilisateur) {
             echo json_encode(["success" => true, "message" => "Les données de l'utilisateur #{$id} ont été mise à jour"]);
         } else {
             echo json_encode(["success" => false, "message" => "Échec de la mise à jour de l'utilisateur"]);

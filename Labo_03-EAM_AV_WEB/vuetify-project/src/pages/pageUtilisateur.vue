@@ -1,12 +1,19 @@
 <template>
   <div class="container">
-    <div class="connexion">
-      <p id="titre">CONNEXION</p>
-      <form
-        action="php/Forms/connexionUser.php"
-        id="connexionForm"
-        method="POST"
-      >
+    <div class="update">
+      <p id="titre">MON PROFIL</p>
+      <p>
+        Bonjour, <br />
+        Bienvenue sur votre profil utilisateur!
+      </p>
+      <form>
+        <input id="prenom" name="prenom" type="text" placeholder="PRENOM" />
+        <input
+          id="nomDeFamille"
+          name="nomDeFamille"
+          type="text"
+          placeholder="NOM DE FAMILLE"
+        />
         <input
           id="email"
           name="email"
@@ -16,20 +23,13 @@
         <br />
         <input id="mdp" name="mdp" type="password" placeholder="MOT DE PASSE" />
         <br />
-        <input id="buttonConnexion" type="submit" value="CONNEXION" />
-        <button
-          type="button"
-          id="buttonInscription"
-          onclick="window.location.href='inscription';"
-        >
-          S'INSCRIRE
-        </button>
+        <input id="buttonConnexion" type="submit" value="MODIFIER" />
       </form>
     </div>
   </div>
 </template>
 <style scoped>
-.connexion {
+.update {
   display: flex;
   flex-direction: column;
   align-items: center;

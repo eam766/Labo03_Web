@@ -55,9 +55,22 @@ class UtilisateurModel {
     }
 
     public function deleteUtilisateur($id) {
-        $sql = "DELETE FROM utilisateurs WHERE id = :id";
+        $sql = "DELETE FROM `utilisateurs` WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(":id", $id, PDO::PARAM_STR);
         return $stmt->execute();
+    }
+
+    public function verifierLogin($courriel, $password){
+        $sql = "SELECT * FROM `utilisateurs` WHERE courriel = :courriel";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(["courriel" => $courriel]);
+        $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($utilisateur && password_verify($password, $utilisateur['password'])){
+            return $utilisateur;
+        }
+
+        return null;
     }
 }

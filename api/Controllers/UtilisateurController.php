@@ -32,5 +32,25 @@ public function deleteUtilisateur($id){
     return $this->model->deleteUtilisateur($id);
 }
 
+public function login($courriel, $password){
+    $utilisateur = $this->model->verifierLogin($courriel, $password);
+
+    if($utilisateur){
+        //unset($utilisateur['password']);
+
+        return[
+            "success" => true,
+            "message" => "Connexion réussie",
+            "utilisateur" => $utilisateur
+        ];
+    }
+
+    return [
+        "success" => false,
+        "message" => "Courriel ou mot de passe incorrect"
+    ];
+
+}
+
 
 }
