@@ -1,21 +1,19 @@
 <script>
 export default {
   data() {
-    const URLabonnements =
-      "http://localhost:4208/Labo3_Web_EA_AV/api/abonnements";
     return {
       courriel: "",
       boolValide: false,
+      boolDejaLa: false,
       successMessage: "",
+      errorMessage: "",
       emailRules: [
         (value) => {
           if (value) return true;
-
           return "Courriel requis.";
         },
         (value) => {
           if (/.+@.+\..+/.test(value)) return true;
-
           return "Le courriel doit être valide.";
         },
       ],
@@ -23,45 +21,81 @@ export default {
   },
   watch: {
     courriel() {
-      this.isValide(); // Appelle la validation à chaque changement de courriel
+      this.isValide();
     },
   },
   methods: {
     isValide() {
-      // Vérifie si le courriel est valide
+      this.boolDejaLa = false;
       const pattern =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (!this.courriel || !pattern.test(this.courriel)) {
-        this.boolValide = false; // Désactive le bouton si le courriel est invalide
-      } else {
-        this.boolValide = true; // Active le bouton si tout est correct
+      this.boolValide = this.courriel && pattern.test(this.courriel);
+      if (this.boolValide) {
+        this.successMessage = "";
+      }
+    },
+    async checkEmailExists(courriel) {
+      try {
+        const response = await fetch(
+          `http://localhost:4208/Labo3_Web_EA_AV/api/abonnements/${encodeURIComponent(
+            courriel
+          )}`
+        );
+        if (!response.ok) {
+          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+        const result = await response.json();
+        if (result.length > 0) {
+          this.boolDejaLa = true;
+          return true;
+        } // Si un résultat est retourné, le courriel existe
+      } catch (error) {
+        console.error("Erreur lors de la vérification du courriel :", error);
+        return false; // En cas d'erreur, on suppose que le courriel n'existe pas
       }
     },
     async submitForm() {
       if (!this.boolValide) {
+        this.errorMessage = "Formulaire invalide.";
         console.error("Formulaire invalide.");
-        return; // Stoppe la soumission si le formulaire est invalide
+        return;
       }
 
       try {
-        const response = await fetch(URLabonnements, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ courriel: this.courriel }),
-        });
+        const emailExists = await this.checkEmailExists(this.courriel);
+        if (emailExists) {
+          this.errorMessage = "Le courriel est déjà inscrit.";
+          this.successMessage = "";
+          console.error("Le courriel est déjà inscrit.");
+          return;
+        }
+
+        const response = await fetch(
+          "http://localhost:4208/Labo3_Web_EA_AV/api/abonnements",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ courriel: this.courriel }),
+          }
+        );
 
         const result = await response.json();
         console.log("Réponse du serveur :", result);
 
         if (response.ok) {
-          this.successMessage = "Inscription reussi";
+          this.successMessage = "Inscription réussie.";
+          this.errorMessage = "";
           this.courriel = ""; // Réinitialise le champ
           this.boolValide = false; // Réinitialise le bouton
+        } else {
+          this.errorMessage = "Erreur lors de l'inscription.";
         }
       } catch (error) {
         console.error("Erreur lors de l'envoi :", error);
+        this.errorMessage = "Erreur de connexion au serveur.";
+        this.successMessage = "";
       }
     },
   },
@@ -100,7 +134,7 @@ export default {
           >
         </v-form>
         <p class="success">{{ successMessage }}</p>
-        <p v-if="!boolValide" class="error">{{ errorMessage }}</p>
+        <p v-if="!boolValide || boolDejaLa" class="error">{{ errorMessage }}</p>
       </div>
       <img
         src="/src/img/produits/tie7.webp"
