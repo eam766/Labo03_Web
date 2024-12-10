@@ -121,6 +121,11 @@ switch ($method | $uri) {
         echo json_encode($utilisateur);
         break;
 
+    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/utilisateurs'):
+        $utilisateurs = $controllerUtilisateur->getAllUtilisateurs();
+        echo json_encode($utilisateurs);
+        break;    
+
     default:
         echo "Erreur : Chemin non reconnu ou non pris en charge";
         echo "\nURI: " . $uri;

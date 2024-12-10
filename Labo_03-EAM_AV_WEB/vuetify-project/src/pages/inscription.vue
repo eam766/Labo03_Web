@@ -19,6 +19,7 @@ export default {
 
           return "Le courriel doit être valide.";
         },
+
         noNumbers: (value) => {
           // Check if the value contains numbers
           const numberRegex = /\d/;
@@ -43,6 +44,25 @@ export default {
   },
 
   methods: {
+    async fetchProductDetails() {
+      try {
+        const response = await fetch();
+        if (!response.ok) {
+          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log("Détails du produit récupérés :", data);
+
+        // Accéder au premier élément du tableau
+        productDetails.value = data[0];
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des détails du produit :",
+          error
+        );
+      }
+    },
+
     isNameAndLastNameValid() {
       if (
         this.nom.length > 0 &&
