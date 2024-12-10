@@ -51,6 +51,12 @@ switch ($method | $uri) {
         echo json_encode($produit);
         break;
 
+    case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/quantityProduits\/[1-9]/', $uri)):
+        $id = end($segments);
+        $quantity = $controllerProduit->getQuantityByIdProduct($id);
+        echo json_encode($quantity);
+        break;
+
     case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/abonnements'):
         $abonnements = $controllerAbonnement->getAllAbonnements();
         echo json_encode($abonnements);

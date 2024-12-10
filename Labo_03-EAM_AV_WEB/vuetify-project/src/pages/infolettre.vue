@@ -1,6 +1,8 @@
 <script>
 export default {
   data() {
+    const URLabonnements =
+      "http://localhost:4208/Labo3_Web_EA_AV/api/abonnements";
     return {
       courriel: "",
       boolValide: false,
@@ -42,16 +44,13 @@ export default {
       }
 
       try {
-        const response = await fetch(
-          "http://localhost:4208/Labo3_Web_EA_AV/api/abonnements",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ courriel: this.courriel }),
-          }
-        );
+        const response = await fetch(URLabonnements, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ courriel: this.courriel }),
+        });
 
         const result = await response.json();
         console.log("Réponse du serveur :", result);
