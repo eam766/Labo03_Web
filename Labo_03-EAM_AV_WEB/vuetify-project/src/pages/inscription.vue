@@ -44,25 +44,23 @@ export default {
   },
 
   methods: {
-    async fetchProductDetails() {
+    async checkEmailExists(courriel) {
       try {
-        const response = await fetch();
+        const response = await fetch(
+          `http://localhost:4208/Labo3_Web_EA_AV/api/utilisateurs/courriel/${encodeURIComponent(
+            courriel
+          )}`
+        );
         if (!response.ok) {
           throw new Error(`Erreur ${response.status}: ${response.statusText}`);
         }
-        const data = await response.json();
-        console.log("Détails du produit récupérés :", data);
-
-        // Accéder au premier élément du tableau
-        productDetails.value = data[0];
+        const result = await response.json();
+        return result.length > 0; // Si un résultat est retourné, le courriel existe
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des détails du produit :",
-          error
-        );
+        console.error("Erreur lors de la vérification du courriel :", error);
+        return false; // En cas d'erreur, on suppose que le courriel n'existe pas
       }
     },
-
     isNameAndLastNameValid() {
       if (
         this.nom.length > 0 &&
@@ -106,10 +104,20 @@ export default {
     async submitForm() {
       if (!this.boolValide) {
         console.error("Formulaire invalide.");
-        return; // Stoppe la soumission si le formulaire est invalide
+        return;
       }
 
       try {
+        // Vérifie si le courriel existe
+        const emailExists = await this.checkEmailExists(this.courriel);
+        if (emailExists) {
+          this.successMessage = "";
+          console.error("Le courriel est déjà utilisé.");
+          alert("Le courriel est déjà utilisé !");
+          return;
+        }
+
+        // Si le courriel n'existe pas, soumettre le formulaire
         const response = await fetch(
           "http://localhost:4208/Labo3_Web_EA_AV/api/utilisateurs",
           {
@@ -127,15 +135,15 @@ export default {
         );
 
         const result = await response.json();
-        console.log("Réponse du serveur :", result);
-
         if (response.ok) {
-          this.successMessage = "Inscription reussi";
+          this.successMessage = "Inscription réussie.";
           this.nom = "";
           this.prenom = "";
           this.password = "";
-          this.courriel = ""; // Réinitialise le champ
-          this.boolValide = false; // Réinitialise le bouton
+          this.courriel = "";
+          this.boolValide = false;
+        } else {
+          console.error("Erreur lors de l'inscription :", result);
         }
       } catch (error) {
         console.error("Erreur lors de l'envoi :", error);

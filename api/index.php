@@ -115,6 +115,16 @@ switch ($method | $uri) {
         }
         break;
 
+
+    case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/utilisateurs\/courriel\/(.+)/', $uri)):
+        // Récupérer le courriel depuis l'URI
+        $courriel = urldecode(end($segments));
+        $utilisateur = $controllerUtilisateur->getUtilisateurByCourriel($courriel);
+        // Si le courriel existe, retourne un tableau avec les infos, sinon tableau vide
+        echo json_encode($utilisateur ? [$utilisateur] : []);
+        break;
+           
+
     case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/utilisateurs\/[1-9]/', $uri)):  
         $id = end($segments);
         $utilisateur = $controllerUtilisateur->getUtilisateurById($id);
