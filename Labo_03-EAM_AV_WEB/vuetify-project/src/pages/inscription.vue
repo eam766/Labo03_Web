@@ -8,6 +8,7 @@ export default {
       courriel: "",
       boolValide: false,
       successMessage: "",
+      errorMessage: "",
       show1: false,
       show2: true,
       rules: {
@@ -55,69 +56,64 @@ export default {
           throw new Error(`Erreur ${response.status}: ${response.statusText}`);
         }
         const result = await response.json();
-        return result.length > 0; // Si un résultat est retourné, le courriel existe
+        // Si un résultat est retourné, le courriel existe
+        return result.length > 0;
       } catch (error) {
         console.error("Erreur lors de la vérification du courriel :", error);
-        return false; // En cas d'erreur, on suppose que le courriel n'existe pas
+        return false; // En cas d'erreur, suppose que le courriel n'existe pas
       }
     },
+
     isNameAndLastNameValid() {
-      if (
+      return (
         this.nom.length > 0 &&
         this.nom.length < 256 &&
         this.prenom.length > 0 &&
         this.prenom.length < 256
-      ) {
-        return true;
-      } else {
-        return false;
-      }
+      );
     },
+
     isPasswordValid() {
-      if (this.password.length > 7 && this.password.length < 256) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.password.length >= 8 && this.password.length < 256;
     },
+
     isCourrielValide() {
-      // Vérifie si le courriel est valide
       const pattern =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (!this.courriel || !pattern.test(this.courriel)) {
-        return false; // Désactive le bouton si le courriel est invalide
-      } else {
-        return true; // Active le bouton si tout est correct
-      }
+      return this.courriel && pattern.test(this.courriel);
     },
-    isValide() {
+
+    async isValide() {
+      // Valide chaque champ individuellement
       if (
-        this.isCourrielValide() &&
         this.isNameAndLastNameValid() &&
-        this.isPasswordValid()
+        this.isPasswordValid() &&
+        this.isCourrielValide()
       ) {
-        this.boolValide = true;
+        // Vérifie si le courriel existe dans la base de données
+        const emailExists = await this.checkEmailExists(this.courriel);
+        if (emailExists) {
+          this.errorMessage = "Le courriel est déjà utilisé.";
+          this.boolValide = false;
+        } else {
+          this.errorMessage = "";
+          this.boolValide = true;
+        }
       } else {
+        this.errorMessage = "Veuillez remplir tous les champs correctement.";
         this.boolValide = false;
       }
     },
+
     async submitForm() {
+      await this.isValide(); // Assure la validation avant soumission
+
       if (!this.boolValide) {
         console.error("Formulaire invalide.");
-        return;
+        return; // Stoppe la soumission si le formulaire est invalide
       }
 
       try {
-        // Vérifie si le courriel existe
-        const emailExists = await this.checkEmailExists(this.courriel);
-        if (emailExists) {
-          this.successMessage = "";
-          console.error("Le courriel est déjà utilisé.");
-          alert("Le courriel est déjà utilisé !");
-          return;
-        }
-
-        // Si le courriel n'existe pas, soumettre le formulaire
         const response = await fetch(
           "http://localhost:4208/Labo3_Web_EA_AV/api/utilisateurs",
           {
@@ -135,18 +131,23 @@ export default {
         );
 
         const result = await response.json();
+        console.log("Réponse du serveur :", result);
+
         if (response.ok) {
           this.successMessage = "Inscription réussie.";
+          this.errorMessage = "";
           this.nom = "";
           this.prenom = "";
           this.password = "";
-          this.courriel = "";
-          this.boolValide = false;
+          this.courriel = ""; // Réinitialise le champ
+          this.boolValide = false; // Réinitialise le bouton
         } else {
-          console.error("Erreur lors de l'inscription :", result);
+          this.errorMessage =
+            result.message || "Une erreur est survenue lors de l'inscription.";
         }
       } catch (error) {
         console.error("Erreur lors de l'envoi :", error);
+        this.errorMessage = "Erreur de connexion au serveur.";
       }
     },
   },
@@ -210,7 +211,13 @@ export default {
                 name="courriel"
               ></v-text-field>
             </v-col>
+            <p class="success">{{ successMessage }}</p>
 
+            <v-col cols="12" md="8">
+              <p v-if="!boolValide" class="error">
+                {{ errorMessage }}
+              </p>
+            </v-col>
             <!-- Submit Button -->
             <v-col cols="12" md="8" class="text-center">
               <v-btn
