@@ -86,4 +86,9 @@ class ProduitController
     public function getQuantityByIdProduct($idProduct){
         return $this->model->getQuantityByIdProduct($idProduct);
     }
+
+    public function getDistinctValues($table, $column) {
+        return $this->model->getDistinctColumnValues($table, $column);
+    }
+    
 }

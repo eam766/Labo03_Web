@@ -14,16 +14,13 @@ export default {
       rules: {
         required: (value) => !!value || "Requis.",
         min: (v) => v.length >= 8 || "Minimum 8 caractères svp",
-        max: (v) => v.length < 256 || "Maximum  256 caractères svp",
+        max: (v) => v.length < 256 || "Maximum 256 caractères svp",
         emailValid: (value) => {
           if (/.+@.+\..+/.test(value)) return true;
-
           return "Le courriel doit être valide.";
         },
-
         noNumbers: (value) => {
-          // Check if the value contains numbers
-          const numberRegex = /\d/;
+          const numberRegex = /\d/; // Vérifie si une chaîne contient des chiffres
           return !numberRegex.test(value) || "Seulement des lettres svp";
         },
       },
@@ -106,7 +103,7 @@ export default {
     },
 
     async submitForm() {
-      await this.isValide(); // Assure la validation avant soumission
+      await this.isValide(); // Vérifie si tous les champs sont valides
 
       if (!this.boolValide) {
         console.error("Formulaire invalide.");
@@ -131,22 +128,16 @@ export default {
         );
 
         const result = await response.json();
-        console.log("Réponse du serveur :", result);
 
-        if (response.ok) {
-          this.successMessage = "Inscription réussie.";
-          this.errorMessage = "";
-          this.nom = "";
-          this.prenom = "";
-          this.password = "";
-          this.courriel = ""; // Réinitialise le champ
-          this.boolValide = false; // Réinitialise le bouton
+        if (response.ok && result.success) {
+          this.$router.push({
+            path: "/connexion",
+            query: { message: "Inscription réussie" },
+          });
         } else {
-          this.errorMessage =
-            result.message || "Une erreur est survenue lors de l'inscription.";
+          this.errorMessage = result.message || "Une erreur est survenue.";
         }
       } catch (error) {
-        console.error("Erreur lors de l'envoi :", error);
         this.errorMessage = "Erreur de connexion au serveur.";
       }
     },
@@ -158,7 +149,7 @@ export default {
   <div class="container">
     <div class="connexion">
       <p id="titre">CRÉER UN COMPTE</p>
-      <v-form>
+      <v-form @submit.prevent="submitForm">
         <v-container fluid>
           <v-row justify="center" align="center">
             <!-- Prénom -->
@@ -211,8 +202,9 @@ export default {
                 name="courriel"
               ></v-text-field>
             </v-col>
-            <p class="success">{{ successMessage }}</p>
-
+            <v-col cols="12" md="8">
+              <p class="success">{{ successMessage }}</p>
+            </v-col>
             <v-col cols="12" md="8">
               <p v-if="!boolValide" class="error">
                 {{ errorMessage }}

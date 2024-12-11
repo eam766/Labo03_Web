@@ -133,7 +133,15 @@ switch ($method | $uri) {
     case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/utilisateurs'):
         $utilisateurs = $controllerUtilisateur->getAllUtilisateurs();
         echo json_encode($utilisateurs);
-        break;    
+        break;  
+        
+    case ($method == 'GET' && preg_match('/\/api\/distinct\/(.+)\/(.+)/', $uri)):
+        $table = urldecode($segments[count($segments) - 2]);
+        $column = urldecode(end($segments));
+        $distinctValues = $controllerProduit->getDistinctValues($table, $column);
+        echo json_encode($distinctValues);
+        break;
+        
 
     default:
         echo "Erreur : Chemin non reconnu ou non pris en charge";

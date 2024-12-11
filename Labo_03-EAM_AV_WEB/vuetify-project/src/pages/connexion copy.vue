@@ -5,14 +5,7 @@ export default {
       courriel: "",
       password: "",
       valid: false,
-      successMessage: "",
     };
-  },
-  mounted() {
-    // Récupère le message de succès si présent dans la query string
-    if (this.$route.query.message) {
-      this.successMessage = this.$route.query.message;
-    }
   },
   methods: {
     login() {
@@ -56,8 +49,6 @@ export default {
       <p id="titre">CONNEXION</p>
       <br />
       <v-form ref="form" v-model="valid" lazy-validation>
-        <!-- Message de succès -->
-        <p v-if="successMessage" class="success">{{ successMessage }}</p>
         <v-text-field
           v-model="courriel"
           label="ADRESSE COURRIEL"
