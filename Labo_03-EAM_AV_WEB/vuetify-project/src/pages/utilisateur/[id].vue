@@ -6,6 +6,9 @@ export default {
       nom: "",
       prenom: "",
       courriel: "",
+      password: "",
+      isLoading: false,
+      valid: true,
     };
   },
   created() {
@@ -37,7 +40,59 @@ export default {
     logout() {
       this.$router.push("/connexion");
     },
-    update() {},
+    update() {
+      if (this.isLoading) return;
+      this.isLoading = true;
+      const utilisateurId = this.$route.params.id;
+      const dataToUpdate = {
+        nom: this.nom,
+        prenom: this.prenom,
+        courriel: this.courriel,
+        password: this.password,
+      };
+
+      console.log("Données à mettre à jour : ", dataToUpdate);
+
+      fetch(
+        `http://localhost:4208/Labo3_Web_EA_AV/api/utilisateurs/${utilisateurId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToUpdate), // On envoie les données à l'API
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Erreur lors de la mise à jour des données.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            alert("Profil mis à jour avec succès !");
+            return fetch(
+              `http://localhost:4208/Labo3_Web_EA_AV/api/utilisateurs/${utilisateurId}`
+            );
+          } else {
+            alert("Échec de la mise à jour.");
+          }
+        })
+        .then((response) => response.json())
+        .then((updatedData) => {
+          this.utilisateur = updatedData;
+          this.nom = updatedData.nom;
+          this.prenom = updatedData.prenom;
+          this.courriel = updatedData.courriel;
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la mise à jour :", error);
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
+    },
   },
 };
 </script>
@@ -75,7 +130,9 @@ export default {
           class="fixed-size"
           required
         ></v-text-field>
-        <v-btn class="buttons" @click="update">MODIFIER</v-btn>
+        <v-btn class="buttons" :disabled="isLoading" @click="update"
+          >MODIFIER</v-btn
+        >
         <v-btn class="buttons" @click="logout">DECONNEXION</v-btn>
       </v-form>
     </div>

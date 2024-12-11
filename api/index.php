@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Méthodes autorisées
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Méthodes autorisées
 header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Headers autorisés
 header("Content-type: application/json");
 
@@ -105,8 +105,7 @@ switch ($method | $uri) {
 
     case ($method == 'PUT' && preg_match('/\/Labo3_Web_EA_AV\/api\/utilisateurs\/[1-9]/', $uri)):
         $id = end($segments);
-        parse_str(file_get_contents('php://input'), $_PUT);
-        $data = $_PUT;
+        $data = json_decode(file_get_contents('php://input'), true);
         $utilisateur = $controllerUtilisateur->updateUtilisateur($id, $data['nom'], $data['prenom'], $data['password'], $data['courriel']);
         if ($utilisateur) {
             echo json_encode(["success" => true, "message" => "Les données de l'utilisateur #{$id} ont été mise à jour"]);

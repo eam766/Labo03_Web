@@ -25,11 +25,16 @@ export default {
         })
         .then((data) => {
           if (data.success) {
+            // Utilisateur trouvé, on redirige vers son profil
             this.$router.push(`/utilisateur/${data.utilisateur.id}`);
+          } else {
+            // Connexion échouée, afficher un message d'erreur
+            alert("Connexion échouée : " + data.message);
           }
         })
         .catch((error) => {
           console.error("Erreur :", error);
+          alert("Erreur lors de la connexion : " + error.message);
         });
     },
     goToInscription() {
