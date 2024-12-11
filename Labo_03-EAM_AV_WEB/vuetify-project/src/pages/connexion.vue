@@ -1,30 +1,66 @@
+<script>
+export default {
+  data() {
+    return {
+      courriel: "",
+      password: "",
+      valid: false,
+    };
+  },
+  methods: {
+    login() {
+      fetch("http://localhost:4208/Labo3_Web_EA_AV/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courriel: this.courriel,
+          password: this.password,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Erreur lors de la connexion.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            this.$router.push(`/utilisateur/${data.utilisateur.id}`);
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur :", error);
+        });
+    },
+    goToInscription() {
+      this.$router.push("/inscription");
+    },
+  },
+};
+</script>
 <template>
   <div class="container">
     <div class="connexion">
       <p id="titre">CONNEXION</p>
-      <form
-        action="php/Forms/connexionUser.php"
-        id="connexionForm"
-        method="POST"
-      >
-        <input
-          id="email"
-          name="email"
-          type="text"
-          placeholder="ADRESSE COURRIEL"
-        />
+      <br />
+      <v-form ref="form" v-model="valid" lazy-validation>
+        <v-text-field
+          v-model="courriel"
+          label="ADRESSE COURRIEL"
+          class="fixed-size"
+          required
+        ></v-text-field>
+        <v-text-field
+          v-model="password"
+          label="MOT DE PASSE"
+          type="password"
+          class="fixed-size"
+          required
+        ></v-text-field>
         <br />
-        <input id="mdp" name="mdp" type="password" placeholder="MOT DE PASSE" />
-        <br />
-        <input id="buttonConnexion" type="submit" value="CONNEXION" />
-        <button
-          type="button"
-          id="buttonInscription"
-          onclick="window.location.href='inscription';"
-        >
-          S'INSCRIRE
-        </button>
-      </form>
+        <v-btn class="buttons" @click="login">CONNEXION</v-btn>
+        <v-btn class="buttons" @click="goToInscription">S'INSCRIRE</v-btn>
+      </v-form>
     </div>
   </div>
 </template>
@@ -41,6 +77,10 @@
   width: 700px;
 }
 
+.fixed-size {
+  width: 300px;
+}
+
 #titre {
   font-size: 2rem;
   color: #ff71ce;
@@ -52,53 +92,10 @@
   text-shadow: 3px 4px 0 #b967ff;
 }
 
-#mdp,
-#email {
-  height: 30px;
-  width: 300px;
-  padding-left: 10px;
-  margin: 15px;
-}
-
-.error {
-  margin: 0px;
-  padding: 0px;
-  color: red;
-  font-size: 0.8rem;
-  margin-left: 15px;
-}
-
-#confirmation {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #bfb9ff;
-  color: white;
-  border: 2px solid white;
-  width: 100%;
-  margin-top: 40px;
-}
-
-#confirmation > p {
-  text-align: center;
-}
-
-input {
-  background-color: white;
-  color: black;
-}
-
-input:hover {
-  cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
-}
-
-#buttonInscription,
-#buttonConnexion {
-  height: 34px;
-  width: 100px;
-  margin-left: 10px;
-  margin-top: 15px;
+.buttons {
+  height: 40px;
+  width: 120px;
+  margin: 10px;
   background-color: #b967ff;
   border-radius: 8px;
   border: 2px solid black;
@@ -107,8 +104,7 @@ input:hover {
   color: black;
 }
 
-#buttonInscription:hover,
-#buttonConnexion:hover {
+.buttons:hover {
   box-shadow: 2px 2px black;
   cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
 }

@@ -1,9 +1,9 @@
 <template>
   <header>
     <div id="connexion">
-      <a href="./connexion"
+      <router-link to="/connexion"
         ><span class="mdi mdi-account-circle-outline"></span
-      ></a>
+      ></router-link>
       <input id="buttonDeconnexion" type="submit" value="DECONNEXION" />
     </div>
     <v-img :width="500" :height="220" src="/src/img/web/logov23749802.png" />
