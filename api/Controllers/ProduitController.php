@@ -16,7 +16,7 @@ class ProduitController
         return $this->model->getAllProduits();
     }
 
- public function getProduitsFiltrer($type,$prix,$taille,$couleur){
+ public function getProduitsFiltrerXXX($type,$prix,$taille,$couleur){
 
 
         $type == "" ? $type = '%': $type ;
@@ -89,6 +89,14 @@ class ProduitController
 
     public function getDistinctValues($table, $column) {
         return $this->model->getDistinctColumnValues($table, $column);
+    }
+
+    public function getProduitsFiltrer($type, $prixMin, $prixMax, $taille, $couleur) {
+        $type = empty($type) ? '%' : $type;
+        $taille = empty($taille) ? '%' : '%' . $taille . '%';
+        $couleur = empty($couleur) ? '%' : $couleur;
+
+        return $this->model->getProduitsFiltrer($type, $prixMin, $prixMax, $taille, $couleur);
     }
     
 }

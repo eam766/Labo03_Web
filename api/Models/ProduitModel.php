@@ -46,7 +46,7 @@ class ProduitModel
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function getProduitsFiltrer($type,$prixMin,$prixMax,$taille,$couleur){
+        public function getProduitsFiltrerXXX($type,$prixMin,$prixMax,$taille,$couleur){
             $sql ="SELECT * FROM produits WHERE type LIKE :type AND (prix BETWEEN :prixMin AND :prixMax) AND couleur LIKE :couleur AND taille LIKE :taille ORDER BY `produits`.`type` DESC;";;
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':type', $type, PDO::PARAM_STR);
@@ -151,6 +151,23 @@ class ProduitModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function getProduitsFiltrer($type, $prixMin, $prixMax, $taille, $couleur) {
+        $sql = "SELECT * FROM produits 
+                WHERE type LIKE :type 
+                AND prix BETWEEN :prixMin AND :prixMax 
+                AND couleur LIKE :couleur 
+                AND taille LIKE :taille 
+                ORDER BY type DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+        $stmt->bindParam(':prixMin', $prixMin, PDO::PARAM_INT);
+        $stmt->bindParam(':prixMax', $prixMax, PDO::PARAM_INT);
+        $stmt->bindParam(':taille', $taille, PDO::PARAM_STR);
+        $stmt->bindParam(':couleur', $couleur, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
     

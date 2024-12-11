@@ -18,6 +18,7 @@ require_once "Database.php";
 
 $uri = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
+$segments = explode('/', $uri);
 
 //connexion base de données
 $db = Database::getInstance();
@@ -141,6 +142,9 @@ switch ($method | $uri) {
         $distinctValues = $controllerProduit->getDistinctValues($table, $column);
         echo json_encode($distinctValues);
         break;
+
+
+    
         
 
     default:
