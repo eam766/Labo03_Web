@@ -10,6 +10,7 @@ const productRealSizes = ref([]);
 console.log(`Récupération des détails pour le produit ID: ${route.params.id}`);
 const URL = `http://localhost:4208/Labo3_Web_EA_AV/api/produits/${route.params.id}`;
 const URLquantity = `http://localhost:4208/Labo3_Web_EA_AV/api/quantityProduits/${route.params.id}`;
+const leChiffre = route.params.id - 1;
 
 // Mapper les ID des tailles avec des tailles réelles
 const sizeMapping = {
@@ -33,7 +34,7 @@ async function fetchProductDetails() {
     console.log("Détails du produit récupérés :", data);
 
     // Accéder au premier élément du tableau
-    productDetails.value = data[0];
+    productDetails.value = data[leChiffre];
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des détails du produit :",

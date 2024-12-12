@@ -31,10 +31,23 @@ $controllerUtilisateur = new UtilisateurController($conn);
 $segments = explode('/', $uri);
 
 switch ($method | $uri) {
-    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produits'):
-        $produits = $controllerProduit->getAllProduits();
+    case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/produits/', $uri)):
+        // Récupération des paramètres de filtre optionnels
+        $type = $_GET['type'] ?? '';
+        $couleur = $_GET['couleur'] ?? '';
+        $taille = $_GET['taille'] ?? '';
+        $prixMin = $_GET['prix_min'] ?? 0;
+        $prixMax = $_GET['prix_max'] ?? 1000;
+    
+        // Appel au modèle via le contrôleur
+        $produits = $controllerProduit->getProduitsFiltrer($type, $prixMin, $prixMax, $taille, $couleur);
+    
+        // Retourner les résultats
         echo json_encode($produits);
         break;
+    
+    
+    
     
     case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produitsExclusifs'):
         $produits = $controllerProduit->getProduitsExclusifs();

@@ -16,39 +16,39 @@ class ProduitController
         return $this->model->getAllProduits();
     }
 
- public function getProduitsFiltrerXXX($type,$prix,$taille,$couleur){
+//  public function getProduitsFiltrerXXX($type,$prix,$taille,$couleur){
 
 
-        $type == "" ? $type = '%': $type ;
-        $taille == "" ? $taille = '%': $taille = '%'.$taille.'%' ;
-        $couleur == "" ? $couleur = '%': $couleur ;
+//         $type == "" ? $type = '%': $type ;
+//         $taille == "" ? $taille = '%': $taille = '%'.$taille.'%' ;
+//         $couleur == "" ? $couleur = '%': $couleur ;
 
-        switch ($prix) {
-            case '0-50':
-                $prixMin = 0;
-                $prixMax = 50;
-                break;
-            case '50-100':
-                $prixMin = 50;
-                $prixMax = 100;
-                break;
-            case '100-150':
-                $prixMin = 100;
-                $prixMax = 150;
-                break;
-            case '150-200':
-                $prixMin = 150;
-                $prixMax = 200;
-                break;
-            default:
-                $prixMin = 0;
-                $prixMax = 200;
-                break;
-        }
+//         switch ($prix) {
+//             case '0-50':
+//                 $prixMin = 0;
+//                 $prixMax = 50;
+//                 break;
+//             case '50-100':
+//                 $prixMin = 50;
+//                 $prixMax = 100;
+//                 break;
+//             case '100-150':
+//                 $prixMin = 100;
+//                 $prixMax = 150;
+//                 break;
+//             case '150-200':
+//                 $prixMin = 150;
+//                 $prixMax = 200;
+//                 break;
+//             default:
+//                 $prixMin = 0;
+//                 $prixMax = 200;
+//                 break;
+//         }
 
-    return $this->model->getProduitsFiltrer($type,$prixMin,$prixMax,$taille,$couleur);
+//     return $this->model->getProduitsFiltrer($type,$prixMin,$prixMax,$taille,$couleur);
 
- }
+//  }
 
     public function getProduitById($id){
         return $this->model->getProduitById($id);
@@ -91,12 +91,11 @@ class ProduitController
         return $this->model->getDistinctColumnValues($table, $column);
     }
 
-    public function getProduitsFiltrer($type, $prixMin, $prixMax, $taille, $couleur) {
-        $type = empty($type) ? '%' : $type;
-        $taille = empty($taille) ? '%' : '%' . $taille . '%';
-        $couleur = empty($couleur) ? '%' : $couleur;
 
-        return $this->model->getProduitsFiltrer($type, $prixMin, $prixMax, $taille, $couleur);
+    public function getProduitsFiltrer($type, $couleur, $taille, $prix_min, $prix_max){
+        return $this->model->getProduitsFiltrer($type, $couleur, $taille, $prix_min, $prix_max);
     }
+
+    
     
 }

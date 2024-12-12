@@ -46,18 +46,18 @@ class ProduitModel
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function getProduitsFiltrerXXX($type,$prixMin,$prixMax,$taille,$couleur){
-            $sql ="SELECT * FROM produits WHERE type LIKE :type AND (prix BETWEEN :prixMin AND :prixMax) AND couleur LIKE :couleur AND taille LIKE :taille ORDER BY `produits`.`type` DESC;";;
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':type', $type, PDO::PARAM_STR);
-            $stmt->bindParam(':prixMin', $prixMin, PDO::PARAM_STR);
-            $stmt->bindParam(':prixMax', $prixMax, PDO::PARAM_STR);
-            $stmt->bindParam(':taille', $taille, PDO::PARAM_STR);
-            $stmt->bindParam(':couleur', $couleur, PDO::PARAM_STR);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // public function getProduitsFiltrerXXX($type,$prixMin,$prixMax,$taille,$couleur){
+        //     $sql ="SELECT * FROM produits WHERE type LIKE :type AND (prix BETWEEN :prixMin AND :prixMax) AND couleur LIKE :couleur AND taille LIKE :taille ORDER BY `produits`.`type` DESC;";;
+        //     $stmt = $this->db->prepare($sql);
+        //     $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+        //     $stmt->bindParam(':prixMin', $prixMin, PDO::PARAM_STR);
+        //     $stmt->bindParam(':prixMax', $prixMax, PDO::PARAM_STR);
+        //     $stmt->bindParam(':taille', $taille, PDO::PARAM_STR);
+        //     $stmt->bindParam(':couleur', $couleur, PDO::PARAM_STR);
+        //     $stmt->execute();
+        //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        }
+        // }
         public function getProduitById($id){
             $sql = "SELECT * FROM `produits` WHERE `id` = :id;";
             $stmt = $this->db->prepare($sql);
@@ -154,21 +154,58 @@ class ProduitModel
     }
 
     public function getProduitsFiltrer($type, $prixMin, $prixMax, $taille, $couleur) {
-        $sql = "SELECT * FROM produits 
-                WHERE type LIKE :type 
-                AND prix BETWEEN :prixMin AND :prixMax 
-                AND couleur LIKE :couleur 
-                AND taille LIKE :taille 
-                ORDER BY type DESC";
+        $sql = "SELECT p.* FROM produits p
+                INNER JOIN quantity q ON p.id = q.idProduct
+                INNER JOIN tailles t ON q.idTaille = t.id
+                WHERE 1=1";
+    
+        // Filtre par type
+        if (!empty($type)) {
+            $sql .= " AND p.type = :type";
+        }
+    
+        // Filtre par couleur
+        if (!empty($couleur)) {
+            $sql .= " AND p.couleur = :couleur";
+        }
+    
+        // Filtre par taille
+        if (!empty($taille)) {
+            $sql .= " AND t.taille = :taille";
+        }
+        
+    
+        // Filtre par fourchette de prix
+        $sql .= " AND p.prix BETWEEN :prixMin AND :prixMax";
+    
+        // Ajout du GROUP BY pour regrouper les produits par leur id (si nécessaire)
+        if (empty($taille)) {
+            $sql .= " GROUP BY p.id";
+        }
+    
+        // Préparer la requête
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
-        $stmt->bindParam(':prixMin', $prixMin, PDO::PARAM_INT);
-        $stmt->bindParam(':prixMax', $prixMax, PDO::PARAM_INT);
-        $stmt->bindParam(':taille', $taille, PDO::PARAM_STR);
-        $stmt->bindParam(':couleur', $couleur, PDO::PARAM_STR);
+    
+        // Bind des valeurs
+        if (!empty($type)) {
+            $stmt->bindValue(':type', $type, PDO::PARAM_STR);
+        }
+        if (!empty($couleur)) {
+            $stmt->bindValue(':couleur', $couleur, PDO::PARAM_STR);
+        }
+        if (!empty($taille)) {
+            $stmt->bindValue(':taille', $taille, PDO::PARAM_INT);
+        }
+        $stmt->bindValue(':prixMin', $prixMin, PDO::PARAM_INT);
+        $stmt->bindValue(':prixMax', $prixMax, PDO::PARAM_INT);
+    
+        // Exécuter la requête
         $stmt->execute();
+    
+        // Retourner les résultats
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
     
 
