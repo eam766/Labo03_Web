@@ -1,11 +1,13 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import { useAppStore } from "@/stores/app.js";
 
 const route = useRoute();
 const productDetails = ref(null);
 const productSizes = ref([]);
 const productRealSizes = ref([]);
+const store = useAppStore();
 
 console.log(`Récupération des détails pour le produit ID: ${route.params.id}`);
 const URL = `http://localhost:4208/Labo3_Web_EA_AV/api/produit/${route.params.id}`;
@@ -65,6 +67,17 @@ async function fetchProductSizes() {
     );
   }
 }
+function addToCart() {
+  if (productDetails.value) {
+    store.addToCart({
+      id: productDetails.value.id,
+      name: productDetails.value.nom,
+      price: productDetails.value.prix,
+      image: productDetails.value.image,
+    });
+    alert(`${productDetails.value.nom} ajouté au panier.`);
+  }
+}
 
 onMounted(async () => {
   fetchProductDetails();
@@ -86,6 +99,9 @@ onMounted(async () => {
         </li>
       </ul>
       <p v-else>Aucune taille disponible pour ce produit.</p>
+      <v-btn color="primary" class="mt-4" @click="addToCart"
+        >Ajouter au panier</v-btn
+      >
     </div>
   </v-container>
 </template>
