@@ -49,17 +49,17 @@ switch ($method | $uri) {
     
     
     
-    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produitsExclusifs'):
+    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produitExclusifs'):
         $produits = $controllerProduit->getProduitsExclusifs();
         echo json_encode($produits);
         break;
     
-    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produitsSummerCollection'):
+    case ($method == 'GET' && $uri == '/Labo3_Web_EA_AV/api/produitSummerCollection'):
         $produits = $controllerProduit->getProduitsSummerCollection();
         echo json_encode($produits);
         break;
 
-    case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/produits\/[1-9]/', $uri)):
+    case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/produit\/[1-9]/', $uri)):
         $id = end($segments);
         $utilisateur = $controllerProduit->getProduitById($id);
         echo json_encode($utilisateur);

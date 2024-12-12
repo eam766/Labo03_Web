@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 
-const URL = "http://localhost:4208/Labo3_Web_EA_AV/api/produitsExclusifs";
+const URL = "http://localhost:4208/Labo3_Web_EA_AV/api/produitExclusifs";
 let produits = ref([]);
 let isReady = ref(false);
 onMounted(() => {

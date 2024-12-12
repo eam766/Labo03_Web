@@ -2,8 +2,7 @@
 import ProductCard from "@/components/ProductCard.vue";
 import { ref, onMounted } from "vue";
 
-const URL =
-  "http://localhost:4208/Labo3_Web_EA_AV/api/produitsSummerCollection";
+const URL = "http://localhost:4208/Labo3_Web_EA_AV/api/produitSummerCollection";
 let produits = ref([]);
 onMounted(() => {
   fetch(URL)
