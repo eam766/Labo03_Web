@@ -23,15 +23,14 @@ const userNavigationRoute = computed(() =>
 
 <template>
   <header>
-    <!-- Panier Button -->
-    <v-btn class="text-none" stacked to="/panier">
-      <v-badge :content="panierCount" color="red" class="rounded ma-2">
-        <v-icon icon="mdi-bag-personal-outline"></v-icon>
-      </v-badge>
-    </v-btn>
-
     <!-- User Info and Deconnexion -->
     <div id="connexion">
+      <!-- Panier Button -->
+      <router-link to="/panier" class="mr-3">
+        <v-badge :content="panierCount" color="red" class="rounded ma-2">
+          <v-icon icon="mdi-bag-personal-outline"></v-icon>
+        </v-badge>
+      </router-link>
       <router-link :to="userNavigationRoute">
         <span class="mdi mdi-account-circle-outline"></span>
         <span v-if="loggedInUser">{{ loggedInUser.nom }}</span>
@@ -121,5 +120,9 @@ nav > a {
 
 nav > a:hover {
   text-shadow: 1px 2px 0 #b967ff;
+}
+
+.no-background {
+  background-color: transparent !important;
 }
 </style>
