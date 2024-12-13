@@ -120,12 +120,16 @@ export default {
           class="fixed-size"
         ></v-text-field>
         <v-text-field
+          clearable
           v-model="password"
+          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
           :rules="[rules.required, rules.min, rules.max]"
+          :type="show1 ? 'text' : 'password'"
           label="MOT DE PASSE"
           type="password"
           class="fixed-size"
           required
+          @click:append="show1 = !show1"
         ></v-text-field>
         <br />
         <v-btn class="buttons" :disabled="!boolValide" @click="login"

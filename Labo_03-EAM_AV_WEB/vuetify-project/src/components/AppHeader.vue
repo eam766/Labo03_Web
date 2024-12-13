@@ -19,6 +19,7 @@ function logout() {
 const userNavigationRoute = computed(() =>
   loggedInUser.value ? `/utilisateur/${loggedInUser.value.id}` : "/connexion"
 );
+const accueil = "/";
 </script>
 
 <template>
@@ -35,7 +36,12 @@ const userNavigationRoute = computed(() =>
         <span class="mdi mdi-account-circle-outline"></span>
         <span v-if="loggedInUser">{{ loggedInUser.nom }}</span>
       </router-link>
-      <v-btn v-if="loggedInUser" id="buttonDeconnexion" @click="logout">
+      <v-btn
+        v-if="loggedInUser"
+        :to="accueil"
+        id="buttonDeconnexion"
+        @click="logout"
+      >
         DECONNEXION
       </v-btn>
     </div>

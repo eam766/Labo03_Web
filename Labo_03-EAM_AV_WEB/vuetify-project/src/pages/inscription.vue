@@ -80,7 +80,7 @@ export default {
       return (
         this.courriel &&
         pattern.test(this.courriel) &&
-        this.courriel.legnth < 320
+        this.courriel.length < 320
       );
     },
 

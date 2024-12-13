@@ -11,7 +11,38 @@ export default {
       password: "",
       isLoading: false,
       valid: true,
+      boolValide: false,
+      successMessage: "",
+      errorMessage: "",
+      show1: false,
+      rules: {
+        required: (value) => !!value || "Requis.",
+        min: (v) => v.length >= 8 || "Minimum 8 caractères svp",
+        max: (v) => v.length < 256 || "Maximum 256 caractères svp",
+        emailValid: (value) => {
+          if (/.+@.+\..+/.test(value)) return true;
+          return "Le courriel doit être valide.";
+        },
+        noNumbers: (value) => {
+          const numberRegex = /\d/; // Vérifie si une chaîne contient des chiffres
+          return !numberRegex.test(value) || "Seulement des lettres svp";
+        },
+      },
     };
+  },
+  watch: {
+    prenom() {
+      this.isValide(); // Call validation on prenom change
+    },
+    nom() {
+      this.isValide(); // Call validation on nom change
+    },
+    courriel() {
+      this.isValide(); // Call validation on courriel change
+    },
+    password() {
+      this.isValide(); // Call validation on password change
+    },
   },
   created() {
     const utilisateurId = parseInt(this.$route.params.id); // ID from URL
@@ -34,6 +65,41 @@ export default {
     this.fetchUserData(utilisateurId);
   },
   methods: {
+    isNameAndLastNameValid() {
+      return (
+        this.nom.length > 0 &&
+        this.nom.length < 256 &&
+        this.prenom.length > 0 &&
+        this.prenom.length < 256
+      );
+    },
+
+    isPasswordValid() {
+      return this.password.length >= 8 && this.password.length < 256;
+    },
+
+    isCourrielValide() {
+      const pattern =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return (
+        this.courriel &&
+        pattern.test(this.courriel) &&
+        this.courriel.length < 320
+      );
+    },
+    async isValide() {
+      if (
+        this.isNameAndLastNameValid() &&
+        this.isPasswordValid() &&
+        this.isCourrielValide()
+      ) {
+        this.boolValide = true;
+        this.errorMessage = "";
+      } else {
+        this.boolValide = false;
+        this.errorMessage = "Veuillez remplir tous les champs correctement.";
+      }
+    },
     fetchUserData(utilisateurId) {
       this.isLoading = true;
       fetch(
@@ -69,13 +135,16 @@ export default {
     },
     update() {
       if (this.isLoading) return;
+
       this.isLoading = true;
       const utilisateurId = this.$route.params.id;
+
+      // Include the password as it is now required
       const dataToUpdate = {
         nom: this.nom,
         prenom: this.prenom,
         courriel: this.courriel,
-        password: this.password,
+        password: this.password, // Password is always included
       };
 
       console.log("Données à mettre à jour : ", dataToUpdate);
@@ -125,33 +194,43 @@ export default {
       <br />
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-text-field
+          clearable
           v-model="nom"
+          :rules="[rules.max, rules.noNumbers]"
           label="NOM DE FAMILLE"
           class="fixed-size"
           required
         ></v-text-field>
         <v-text-field
+          clearable
           v-model="prenom"
+          :rules="[rules.max, rules.noNumbers]"
           label="PRENOM"
           class="fixed-size"
           required
         ></v-text-field>
         <v-text-field
+          clearable
+          :rules="[rules.max, rules.emailValid]"
           v-model="courriel"
           label="ADRESSE COURRIEL"
           class="fixed-size"
           required
         ></v-text-field>
         <v-text-field
+          clearable
           v-model="password"
+          :rules="[rules.required, rules.min, rules.max]"
+          :type="show1 ? 'text' : 'password'"
+          hint="Votre mot de passe doit contenir au moins 8 caractères."
           label="MOT DE PASSE"
-          type="password"
-          class="fixed-size"
-          required
-        ></v-text-field>
-        <v-btn class="buttons" :disabled="isLoading" @click="update"
-          >MODIFIER</v-btn
-        >
+          @click:append="show1 = !show1"
+        />
+
+        <v-btn class="buttons" :disabled="!boolValide" @click="update">
+          MODIFIER
+        </v-btn>
+
         <v-btn class="buttons" @click="logout">DECONNEXION</v-btn>
       </v-form>
     </div>
