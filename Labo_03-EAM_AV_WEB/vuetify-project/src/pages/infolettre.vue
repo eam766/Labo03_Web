@@ -122,14 +122,10 @@ export default {
             clearable
             v-model="courriel"
             :rules="emailRules"
-            label="Courriel"
-            class="flex-grow-1"
+            label="ADRESSE COURRIEL"
+            class="fixed-size"
           ></v-text-field>
-          <v-btn
-            :disabled="!boolValide"
-            class="ml-2"
-            type="submit"
-            color="primary"
+          <v-btn :disabled="!boolValide" class="button" type="submit"
             >S'INSCRIRE</v-btn
           >
         </v-form>
@@ -205,37 +201,18 @@ a {
   font-size: 1.5rem;
 }
 
-#email {
-  height: 30px;
+.fixed-size {
   width: 300px;
-  padding-left: 10px;
 }
 
-input {
-  background-color: white;
-  color: black;
-}
-
-input:hover {
-  cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
-}
-
-.error {
-  margin: 0px;
-  padding: 0px;
-  color: red;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
-}
-
-#button {
+.button {
   height: 34px;
   width: 100px;
-  margin-left: 10px;
   background-color: #b967ff;
   border-radius: 8px;
   border: 2px solid black;
   box-shadow: 6px 6px black;
+  color: black;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -243,7 +220,7 @@ p {
   text-align: center;
 }
 
-#button:hover {
+.button:hover {
   box-shadow: 2px 2px black;
   cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
 }
