@@ -86,22 +86,64 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-container class="pa-4">
-    <div v-if="productDetails">
-      <h1>{{ productDetails.nom }}</h1>
-      <v-img :width="250" :height="280" :src="productDetails.image" />
-      <p>{{ productDetails.description }}</p>
-      <p>{{ productDetails.prix }}</p>
-      <h2>Tailles disponibles</h2>
-      <ul v-if="productRealSizes.length > 0">
-        <li v-for="size in productRealSizes" :key="size.taille">
-          {{ size.taille }} - Quantité: {{ size.quantity }}
-        </li>
-      </ul>
-      <p v-else>Aucune taille disponible pour ce produit.</p>
-      <v-btn color="primary" class="mt-4" @click="addToCart"
-        >Ajouter au panier</v-btn
-      >
+  <v-container class="pa-8" style="color: #ff71ce">
+    <div v-if="productDetails" class="d-flex">
+      <!-- Image agrandie à gauche -->
+      <v-img
+        :width="400"
+        :height="450"
+        :src="productDetails.image"
+        class="mr-8"
+      />
+
+      <div class="d-flex flex-column justify-start">
+        <!-- Titre avec marge verticale -->
+        <h1>{{ productDetails.nom }}</h1>
+
+        <!-- Prix avec marge verticale -->
+        <p>{{ productDetails.prix }}</p>
+
+        <!-- Description avec marge verticale -->
+        <p class="my-4">{{ productDetails.description }}</p>
+
+        <!-- Tailles disponibles -->
+        <h2 class="my-2">Tailles disponibles</h2>
+
+        <ul v-if="productRealSizes.length > 0">
+          <li
+            class="ml-10 my-2"
+            v-for="size in productRealSizes"
+            :key="size.taille"
+          >
+            {{ size.taille }} - Quantité: {{ size.quantity }}
+          </li>
+        </ul>
+
+        <!-- Message si aucune taille n'est disponible -->
+        <p v-else class="my-4">Aucune taille disponible pour ce produit.</p>
+
+        <!-- Bouton Ajouter au panier avec marge verticale -->
+        <v-btn class="buttons my-4" @click="addToCart">Ajouter au panier</v-btn>
+      </div>
     </div>
   </v-container>
 </template>
+
+<style scoped>
+.buttons {
+  height: 40px;
+  width: 150px;
+  margin: 10px;
+  background-color: #b967ff;
+  border-radius: 8px;
+  border: 2px solid black;
+  box-shadow: 6px 6px black;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: black;
+}
+
+.buttons:hover {
+  box-shadow: 2px 2px black;
+  cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
+}
+</style>
