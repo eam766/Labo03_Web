@@ -20,7 +20,7 @@ const selectedType = ref("Tous");
 const selectedCouleur = ref("Tous");
 const selectedTaille = ref("Tous");
 const prixMin = ref(0);
-const prixMax = ref(1000);
+const prixMax = ref(200);
 
 // Fetch distinct values for filters
 async function fetchDistinctValues(column, destinationArray) {

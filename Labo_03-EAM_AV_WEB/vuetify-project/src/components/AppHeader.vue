@@ -1,27 +1,50 @@
 <script setup>
-import { useAppStore } from "@/stores/app"; // Correctly import the store
+import { useAppStore } from "@/stores/app"; // Import the cart store
+import { useUserAuthStore } from "@/stores/userAuth"; // Import the userAuth store
 import { computed } from "vue";
 
-const store = useAppStore(); // Initialize the Pinia store
-const panierCount = computed(() => store.panier.length); // Reactive count of items in the cart
+const appStore = useAppStore(); // Initialize the cart store
+const userAuthStore = useUserAuthStore(); // Initialize the userAuth store
+
+// Reactive computed values
+const panierCount = computed(() => appStore.panier.length); // Count of cart items
+const loggedInUser = computed(() => userAuthStore.user); // Logged-in user data
+
+// Logout function
+function logout() {
+  userAuthStore.logout(); // Clear the user from the store and localStorage
+}
+
+// Dynamic route for "Connexion/Profile" button
+const userNavigationRoute = computed(() =>
+  loggedInUser.value ? `/utilisateur/${loggedInUser.value.id}` : "/connexion"
+);
 </script>
 
 <template>
   <header>
+    <!-- Panier Button -->
     <v-btn class="text-none" stacked to="/panier">
       <v-badge :content="panierCount" color="red" class="rounded ma-2">
         <v-icon icon="mdi-bag-personal-outline"></v-icon>
       </v-badge>
-
-      <!-- Show simple text if cart is empty -->
     </v-btn>
+
+    <!-- User Info and Deconnexion -->
     <div id="connexion">
-      <router-link to="/connexion"
-        ><span class="mdi mdi-account-circle-outline"></span
-      ></router-link>
-      <input id="buttonDeconnexion" type="submit" value="DECONNEXION" />
+      <router-link :to="userNavigationRoute">
+        <span class="mdi mdi-account-circle-outline"></span>
+        <span v-if="loggedInUser">{{ loggedInUser.nom }}</span>
+      </router-link>
+      <v-btn v-if="loggedInUser" id="buttonDeconnexion" @click="logout">
+        DECONNEXION
+      </v-btn>
     </div>
+
+    <!-- Logo -->
     <v-img :width="500" :height="220" src="/src/img/web/logov23749802.png" />
+
+    <!-- Navigation Links -->
     <nav>
       <router-link to="/">Accueil</router-link>
       <router-link to="/catalogueProduits">Produits</router-link>

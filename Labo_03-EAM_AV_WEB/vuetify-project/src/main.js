@@ -1,20 +1,34 @@
 /**
  * main.js
  *
- * Bootstraps Vuetify and other plugins then mounts the App`
+ * Bootstraps Vuetify and other plugins then mounts the App
  */
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from "@/plugins";
 
 // Components
-import App from './App.vue'
+import App from "./App.vue";
 
 // Composables
-import { createApp } from 'vue'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
-const app = createApp(App)
+// Import your `userAuth` store
+import { useUserAuthStore } from "@/stores/userAuth";
 
-registerPlugins(app)
+const app = createApp(App);
 
-app.mount('#app')
+// Register plugins
+registerPlugins(app);
+
+// Create Pinia instance and use it in the app
+const pinia = createPinia();
+app.use(pinia);
+
+// Hydrate the `userAuth` store from localStorage
+const userAuthStore = useUserAuthStore();
+userAuthStore.hydrate();
+
+// Mount the app
+app.mount("#app");

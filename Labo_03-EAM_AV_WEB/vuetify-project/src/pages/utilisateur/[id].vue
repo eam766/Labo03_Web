@@ -1,4 +1,6 @@
 <script>
+import { useUserAuthStore } from "@/stores/userAuth"; // Import the userAuth store
+
 export default {
   data() {
     return {
@@ -12,33 +14,58 @@ export default {
     };
   },
   created() {
-    const utilisateurId = this.$route.params.id;
+    const utilisateurId = parseInt(this.$route.params.id); // ID from URL
+    const userAuthStore = useUserAuthStore(); // Access Pinia store
+    const loggedInUserId = userAuthStore.user?.id; // Get logged-in user ID
+    const loggedInUserEmail = userAuthStore.user?.courriel;
+    const emailAdmin = "admin@rich.ricasso";
 
-    fetch(
-      `http://localhost:4208/Labo3_Web_EA_AV/api/utilisateurs/${utilisateurId}`
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            "Erreur lors de la récupération des données utilisateur."
-          );
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Données de l'utilisateur : ", data);
-        this.utilisateur = data;
-        this.nom = this.utilisateur.nom;
-        this.prenom = this.utilisateur.prenom;
-        this.courriel = this.utilisateur.courriel;
-      })
-      .catch((error) => {
-        console.error("Erreur :", error);
-      });
+    // Check if the user is logged in and the IDs match
+    if (
+      (!loggedInUserId || utilisateurId !== loggedInUserId) &&
+      loggedInUserEmail !== emailAdmin
+    ) {
+      console.error("Unauthorized access: Redirecting to Accueil.");
+      this.$router.push("/"); // Redirect to Accueil if IDs don't match
+      return;
+    }
+
+    // Fetch user data if the IDs match
+    this.fetchUserData(utilisateurId);
   },
   methods: {
+    fetchUserData(utilisateurId) {
+      this.isLoading = true;
+      fetch(
+        `http://localhost:4208/Labo3_Web_EA_AV/api/utilisateurs/${utilisateurId}`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              "Erreur lors de la récupération des données utilisateur."
+            );
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Données de l'utilisateur : ", data);
+          this.utilisateur = data;
+          this.nom = data.nom;
+          this.prenom = data.prenom;
+          this.courriel = data.courriel;
+        })
+        .catch((error) => {
+          console.error("Erreur :", error);
+          this.$router.push("/"); // Redirect to Accueil on error
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
+    },
     logout() {
-      this.$router.push("/connexion");
+      const userAuthStore = useUserAuthStore(); // Access Pinia store
+      userAuthStore.logout(); // Clear userAuth store
+      this.$router.push("/connexion"); // Redirect to Connexion
     },
     update() {
       if (this.isLoading) return;
@@ -60,7 +87,7 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(dataToUpdate), // On envoie les données à l'API
+          body: JSON.stringify(dataToUpdate),
         }
       )
         .then((response) => {
@@ -72,19 +99,10 @@ export default {
         .then((data) => {
           if (data.success) {
             alert("Profil mis à jour avec succès !");
-            return fetch(
-              `http://localhost:4208/Labo3_Web_EA_AV/api/utilisateurs/${utilisateurId}`
-            );
+            this.fetchUserData(utilisateurId); // Refresh user data
           } else {
             alert("Échec de la mise à jour.");
           }
-        })
-        .then((response) => response.json())
-        .then((updatedData) => {
-          this.utilisateur = updatedData;
-          this.nom = updatedData.nom;
-          this.prenom = updatedData.prenom;
-          this.courriel = updatedData.courriel;
         })
         .catch((error) => {
           console.error("Erreur lors de la mise à jour :", error);
@@ -96,6 +114,7 @@ export default {
   },
 };
 </script>
+
 <template>
   <div class="container">
     <div class="profilUtilisateur" v-if="utilisateur">
@@ -138,55 +157,3 @@ export default {
     </div>
   </div>
 </template>
-
-<style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
-}
-
-.profilUtilisateur {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-width: 100px;
-  border-image: url(/src/img/web/pale_glowing_pink_blue_border.png) 25% stretch;
-  border-style: solid;
-  height: 570px;
-  width: 700px;
-}
-
-.buttons {
-  height: 40px;
-  width: 120px;
-  margin: 10px;
-  background-color: #b967ff;
-  border-radius: 8px;
-  border: 2px solid black;
-  box-shadow: 6px 6px black;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  color: black;
-}
-
-.buttons:hover {
-  box-shadow: 2px 2px black;
-  cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
-}
-
-.bienvenue {
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: #5cf4c6;
-  text-align: center;
-  margin: 0px;
-  margin-top: 8px;
-}
-
-.fixed-size {
-  width: 300px;
-}
-</style>
