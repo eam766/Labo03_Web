@@ -1,4 +1,6 @@
 <script>
+import { useUserAuthStore } from "@/stores/userAuth";
+
 export default {
   data() {
     return {
@@ -9,10 +11,14 @@ export default {
     };
   },
   mounted() {
-    // Récupère le message de succès si présent dans la query string
+    // Keep the success message logic
     if (this.$route.query.message) {
       this.successMessage = this.$route.query.message;
     }
+  },
+  setup() {
+    const userAuthStore = useUserAuthStore();
+    return { userAuthStore };
   },
   methods: {
     login() {
@@ -32,15 +38,13 @@ export default {
         })
         .then((data) => {
           if (data.success) {
-            // Utilisateur trouvé, on redirige vers son profil
-            this.$router.push(`/utilisateur/${data.utilisateur.id}`);
+            this.userAuthStore.login(data.utilisateur, data.token); // Store user and token
+            this.$router.push(`/utilisateur/${data.utilisateur.id}`); // Redirect
           } else {
-            // Connexion échouée, afficher un message d'erreur
             alert("Connexion échouée : " + data.message);
           }
         })
         .catch((error) => {
-          console.error("Erreur :", error);
           alert("Erreur lors de la connexion : " + error.message);
         });
     },
@@ -50,6 +54,7 @@ export default {
   },
 };
 </script>
+
 <template>
   <div class="container">
     <div class="connexion">
