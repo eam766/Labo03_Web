@@ -20,7 +20,7 @@ export default {
           return "Le courriel doit être valide.";
         },
         noNumbers: (value) => {
-          const numberRegex = /\d/; // Vérifie si une chaîne contient des chiffres
+          const numberRegex = /\d/;
           return !numberRegex.test(value) || "Seulement des lettres svp";
         },
       },
@@ -28,16 +28,16 @@ export default {
   },
   watch: {
     prenom() {
-      this.isValide(); // Call validation on prenom change
+      this.isValide();
     },
     nom() {
-      this.isValide(); // Call validation on nom change
+      this.isValide();
     },
     courriel() {
-      this.isValide(); // Call validation on courriel change
+      this.isValide();
     },
     password() {
-      this.isValide(); // Call validation on password change
+      this.isValide();
     },
   },
 
@@ -53,11 +53,10 @@ export default {
           throw new Error(`Erreur ${response.status}: ${response.statusText}`);
         }
         const result = await response.json();
-        // Si un résultat est retourné, le courriel existe
         return result.length > 0;
       } catch (error) {
         console.error("Erreur lors de la vérification du courriel :", error);
-        return false; // En cas d'erreur, suppose que le courriel n'existe pas
+        return false;
       }
     },
 
@@ -85,13 +84,11 @@ export default {
     },
 
     async isValide() {
-      // Valide chaque champ individuellement
       if (
         this.isNameAndLastNameValid() &&
         this.isPasswordValid() &&
         this.isCourrielValide()
       ) {
-        // Vérifie si le courriel existe dans la base de données
         const emailExists = await this.checkEmailExists(this.courriel);
         if (emailExists) {
           this.errorMessage = "Le courriel est déjà utilisé.";
@@ -107,11 +104,11 @@ export default {
     },
 
     async submitForm() {
-      await this.isValide(); // Vérifie si tous les champs sont valides
+      await this.isValide();
 
       if (!this.boolValide) {
         console.error("Formulaire invalide.");
-        return; // Stoppe la soumission si le formulaire est invalide
+        return;
       }
 
       try {
@@ -156,7 +153,6 @@ export default {
       <v-form @submit.prevent="submitForm">
         <v-container fluid>
           <v-row justify="center" align="center">
-            <!-- Prénom -->
             <v-col cols="12" md="8">
               <v-text-field
                 clearable
@@ -169,7 +165,6 @@ export default {
               ></v-text-field>
             </v-col>
 
-            <!-- Nom -->
             <v-col cols="12" md="8">
               <v-text-field
                 clearable
@@ -182,7 +177,6 @@ export default {
               ></v-text-field>
             </v-col>
 
-            <!-- Password -->
             <v-col cols="12" md="8">
               <v-text-field
                 clearable
@@ -198,7 +192,6 @@ export default {
               ></v-text-field>
             </v-col>
 
-            <!-- Courriel -->
             <v-col cols="12" md="8">
               <v-text-field
                 clearable
@@ -217,7 +210,7 @@ export default {
                 {{ errorMessage }}
               </p>
             </v-col>
-            <!-- Submit Button -->
+
             <v-col cols="12" md="8" class="text-center">
               <v-btn
                 variant="outlined"

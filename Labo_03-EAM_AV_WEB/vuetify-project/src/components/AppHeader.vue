@@ -1,21 +1,18 @@
 <script setup>
-import { useAppStore } from "@/stores/app"; // Import the cart store
-import { useUserAuthStore } from "@/stores/userAuth"; // Import the userAuth store
+import { useAppStore } from "@/stores/app";
+import { useUserAuthStore } from "@/stores/userAuth";
 import { computed } from "vue";
 
-const appStore = useAppStore(); // Initialize the cart store
-const userAuthStore = useUserAuthStore(); // Initialize the userAuth store
+const appStore = useAppStore();
+const userAuthStore = useUserAuthStore();
 
-// Reactive computed values
-const panierCount = computed(() => appStore.panier.length); // Count of cart items
-const loggedInUser = computed(() => userAuthStore.user); // Logged-in user data
+const panierCount = computed(() => appStore.panier.length);
+const loggedInUser = computed(() => userAuthStore.user);
 
-// Logout function
 function logout() {
-  userAuthStore.logout(); // Clear the user from the store and localStorage
+  userAuthStore.logout();
 }
 
-// Dynamic route for "Connexion/Profile" button
 const userNavigationRoute = computed(() =>
   loggedInUser.value ? `/utilisateur/${loggedInUser.value.id}` : "/connexion"
 );
@@ -24,9 +21,7 @@ const accueil = "/";
 
 <template>
   <header>
-    <!-- User Info and Deconnexion -->
     <div id="connexion">
-      <!-- Panier Button -->
       <router-link to="/panier" class="mr-3">
         <v-badge :content="panierCount" color="red" class="rounded ma-2">
           <v-icon icon="mdi-bag-personal-outline"></v-icon>
@@ -46,10 +41,8 @@ const accueil = "/";
       </v-btn>
     </div>
 
-    <!-- Logo -->
     <v-img :width="500" :height="220" src="/src/img/web/logov23749802.png" />
 
-    <!-- Navigation Links -->
     <nav>
       <router-link to="/">Accueil</router-link>
       <router-link to="/catalogueProduits">Produits</router-link>

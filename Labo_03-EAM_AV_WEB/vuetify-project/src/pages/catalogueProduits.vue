@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, watchEffect } from "vue";
-import ProductCard from "@/components/ProductCard.vue"; // Your ProductCard component
+import ProductCard from "@/components/ProductCard.vue";
 
 // API URLs
 const URL_PRODUITS = "http://localhost:4208/Labo3_Web_EA_AV/api/produits";
@@ -10,10 +10,10 @@ const URL_TAILLES =
   "http://localhost:4208/Labo3_Web_EA_AV/api/distinct/tailles/taille";
 
 // Reactive variables
-const produits = ref([]); // Products to display
-const types = ref(["Tous"]); // Options for the "Type" filter
-const couleurs = ref(["Tous"]); // Options for the "Couleur" filter
-const tailles = ref(["Tous"]); // Options for the "Taille" filter
+const produits = ref([]);
+const types = ref(["Tous"]);
+const couleurs = ref(["Tous"]);
+const tailles = ref(["Tous"]);
 
 // Selected filters
 const selectedType = ref("Tous");
@@ -38,11 +38,10 @@ async function fetchTailles() {
     const response = await fetch(URL_TAILLES);
     let data = await response.json();
 
-    // Map the data to objects with `value` and `label`
     tailles.value = [
       { value: "Tous", label: "Tous" },
       ...data.map((taille) => ({
-        value: taille, // Keep the original value for filtering
+        value: taille,
         label: taille === 1 ? "Unique" : taille.toString(),
       })),
     ];
@@ -65,18 +64,17 @@ async function fetchProduits(filters = {}) {
 
 // Initialize filters and products on component mount
 onMounted(() => {
-  fetchDistinctValues("type", types); // Fetch distinct "Type" values
-  fetchDistinctValues("couleur", couleurs); // Fetch distinct "Couleur" values
+  fetchDistinctValues("type", types);
+  fetchDistinctValues("couleur", couleurs);
   fetchTailles();
-  fetchProduits(); // Fetch all products by default
+  fetchProduits();
 });
 
-// Apply filters dynamically whenever any filter value changes
 watchEffect(() => {
   const filters = {};
   if (selectedType.value !== "Tous") filters.type = selectedType.value;
   if (selectedCouleur.value !== "Tous") filters.couleur = selectedCouleur.value;
-  if (selectedTaille.value !== "Tous") filters.taille = selectedTaille.value; // Use the `value` directly
+  if (selectedTaille.value !== "Tous") filters.taille = selectedTaille.value;
   filters.prix_min = prixMin.value;
   filters.prix_max = prixMax.value;
 
@@ -86,9 +84,7 @@ watchEffect(() => {
 
 <template>
   <v-container>
-    <!-- Filter Controls -->
     <v-row>
-      <!-- Type Dropdown -->
       <v-col cols="12" sm="6" md="4">
         <v-select
           v-model="selectedType"
@@ -97,7 +93,6 @@ watchEffect(() => {
         ></v-select>
       </v-col>
 
-      <!-- Couleur Dropdown -->
       <v-col cols="12" sm="6" md="4">
         <v-select
           v-model="selectedCouleur"
@@ -106,7 +101,6 @@ watchEffect(() => {
         ></v-select>
       </v-col>
 
-      <!-- Taille Dropdown -->
       <v-col cols="12" sm="6" md="4">
         <v-select
           v-model="selectedTaille"
@@ -125,7 +119,6 @@ watchEffect(() => {
         </v-select>
       </v-col>
 
-      <!-- Price Range -->
       <v-col cols="12" sm="6" md="4">
         <v-text-field
           v-model.number="prixMin"
@@ -142,7 +135,6 @@ watchEffect(() => {
       </v-col>
     </v-row>
 
-    <!-- Display Products -->
     <v-row justify="center" align="center" class="g-4">
       <v-col
         v-for="produit in produits"

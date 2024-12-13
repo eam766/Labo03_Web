@@ -87,8 +87,8 @@ export default {
         if (response.ok) {
           this.successMessage = "Inscription réussie.";
           this.errorMessage = "";
-          this.courriel = ""; // Réinitialise le champ
-          this.boolValide = false; // Réinitialise le bouton
+          this.courriel = "";
+          this.boolValide = false;
         } else {
           this.errorMessage = "Erreur lors de l'inscription.";
         }

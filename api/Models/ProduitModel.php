@@ -13,7 +13,6 @@ class ProduitModel
             $result = $this->db->query($sql);
             return $result->fetchAll(PDO::FETCH_ASSOC);
         }
-        //???
         public function getProduitByType($type){
             $sql = "SELECT * FROM `produits` WHERE `type` = :type;";
             $stmt = $this->db->prepare($sql);
@@ -21,7 +20,7 @@ class ProduitModel
             $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
-            // truc exclusif  A MODIFIER les ids etc...
+
         public function getProduitsExclusifs(){
             $ids = [4, 8, 7, 14, 17, 18, 13];
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
@@ -33,7 +32,7 @@ class ProduitModel
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
-        //a modifier les ids
+        
         public function getProduitsSummerCollection(){
             $ids = [9, 10, 11, 12, 13, 14];
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
@@ -46,18 +45,6 @@ class ProduitModel
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        // public function getProduitsFiltrerXXX($type,$prixMin,$prixMax,$taille,$couleur){
-        //     $sql ="SELECT * FROM produits WHERE type LIKE :type AND (prix BETWEEN :prixMin AND :prixMax) AND couleur LIKE :couleur AND taille LIKE :taille ORDER BY `produits`.`type` DESC;";;
-        //     $stmt = $this->db->prepare($sql);
-        //     $stmt->bindParam(':type', $type, PDO::PARAM_STR);
-        //     $stmt->bindParam(':prixMin', $prixMin, PDO::PARAM_STR);
-        //     $stmt->bindParam(':prixMax', $prixMax, PDO::PARAM_STR);
-        //     $stmt->bindParam(':taille', $taille, PDO::PARAM_STR);
-        //     $stmt->bindParam(':couleur', $couleur, PDO::PARAM_STR);
-        //     $stmt->execute();
-        //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // }
         public function getProduitById($id){
             $sql = "SELECT * FROM `produits` WHERE `id` = :id;";
             $stmt = $this->db->prepare($sql);
@@ -103,8 +90,6 @@ class ProduitModel
         }
 
 
-        //Partie pour les tailles
-
     public function getTaille($id){
         $sql = "SELECT * FROM tailles WHERE id = :id";
         $stmt = $this->db->prepare($sql);
@@ -113,7 +98,6 @@ class ProduitModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    //Partie pour les quantity 
 
     public function getAllQuantity(){
         $sql = "SELECT * FROM quantity";
@@ -129,7 +113,6 @@ class ProduitModel
         return $stmt->execute();
     }
 
-     //possiblement pas utile mais peut servir un jours
      public function deleteQuantity($id) {
         $sql = "DELETE FROM quantity WHERE id = :id";
         $stmt = $this->db->prepare($sql);
@@ -174,19 +157,15 @@ class ProduitModel
             $sql .= " AND t.taille = :taille";
         }
         
-    
-        // Filtre par fourchette de prix
+        // Filtre par prix
         $sql .= " AND p.prix BETWEEN :prixMin AND :prixMax";
     
-        // Ajout du GROUP BY pour regrouper les produits par leur id (si nécessaire)
         if (empty($taille)) {
             $sql .= " GROUP BY p.id";
         }
     
-        // Préparer la requête
         $stmt = $this->db->prepare($sql);
     
-        // Bind des valeurs
         if (!empty($type)) {
             $stmt->bindValue(':type', $type, PDO::PARAM_STR);
         }
@@ -199,10 +178,8 @@ class ProduitModel
         $stmt->bindValue(':prixMin', $prixMin, PDO::PARAM_INT);
         $stmt->bindValue(':prixMax', $prixMax, PDO::PARAM_INT);
     
-        // Exécuter la requête
         $stmt->execute();
     
-        // Retourner les résultats
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     

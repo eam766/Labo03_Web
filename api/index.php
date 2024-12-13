@@ -32,17 +32,14 @@ $segments = explode('/', $uri);
 
 switch ($method | $uri) {
     case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/produits/', $uri)):
-        // Récupération des paramètres de filtre optionnels
         $type = $_GET['type'] ?? '';
         $couleur = $_GET['couleur'] ?? '';
         $taille = $_GET['taille'] ?? '';
         $prixMin = $_GET['prix_min'] ?? 0;
         $prixMax = $_GET['prix_max'] ?? 1000;
-    
-        // Appel au modèle via le contrôleur
+
         $produits = $controllerProduit->getProduitsFiltrer($type, $prixMin, $prixMax, $taille, $couleur);
     
-        // Retourner les résultats
         echo json_encode($produits);
         break;
     
@@ -77,10 +74,9 @@ switch ($method | $uri) {
         break;
 
     case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/abonnements\/(.+)/', $uri)):
-        // Récupérer le courriel depuis l'URI
         $courriel = urldecode(end($segments));
         $abonnement = $controllerAbonnement->getAbonnement($courriel);
-        // Si le courriel existe, retourne l'abonnement, sinon un tableau vide
+
         echo json_encode($abonnement ? [$abonnement] : []);
         break;
         
@@ -130,10 +126,9 @@ switch ($method | $uri) {
 
 
     case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/utilisateurs\/courriel\/(.+)/', $uri)):
-        // Récupérer le courriel depuis l'URI
         $courriel = urldecode(end($segments));
         $utilisateur = $controllerUtilisateur->getUtilisateurByCourriel($courriel);
-        // Si le courriel existe, retourne un tableau avec les infos, sinon tableau vide
+
         echo json_encode($utilisateur ? [$utilisateur] : []);
         break;
            
@@ -156,10 +151,6 @@ switch ($method | $uri) {
         $distinctValues = $controllerProduit->getDistinctValues($table, $column);
         echo json_encode($distinctValues);
         break;
-
-
-    
-        
 
     default:
         echo "Erreur : Chemin non reconnu ou non pris en charge";

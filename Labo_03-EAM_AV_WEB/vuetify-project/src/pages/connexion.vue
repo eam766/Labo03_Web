@@ -32,7 +32,6 @@ export default {
     },
   },
   mounted() {
-    // Keep the success message logic
     if (this.$route.query.message) {
       this.successMessage = this.$route.query.message;
     }
@@ -87,8 +86,8 @@ export default {
         })
         .then((data) => {
           if (data.success) {
-            this.userAuthStore.login(data.utilisateur, data.token); // Store user and token
-            this.$router.push(`/utilisateur/${data.utilisateur.id}`); // Redirect
+            this.userAuthStore.login(data.utilisateur, data.token);
+            this.$router.push(`/utilisateur/${data.utilisateur.id}`);
           } else {
             alert("Connexion échouée : " + data.message);
           }
@@ -110,7 +109,6 @@ export default {
       <p id="titre">CONNEXION</p>
       <br />
       <v-form ref="form" v-model="valid" lazy-validation>
-        <!-- Message de succès -->
         <p v-if="successMessage" class="success">{{ successMessage }}</p>
         <v-text-field
           clearable
