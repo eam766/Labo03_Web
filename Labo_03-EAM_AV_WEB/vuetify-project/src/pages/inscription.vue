@@ -77,7 +77,11 @@ export default {
     isCourrielValide() {
       const pattern =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return this.courriel && pattern.test(this.courriel);
+      return (
+        this.courriel &&
+        pattern.test(this.courriel) &&
+        this.courriel.legnth < 320
+      );
     },
 
     async isValide() {

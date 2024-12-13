@@ -8,7 +8,28 @@ export default {
       password: "",
       valid: false,
       successMessage: "",
+      errorMessage: "",
+      show1: false,
+      show2: true,
+      boolValide: false,
+      rules: {
+        required: (value) => !!value || "Requis.",
+        emailValid: (value) => {
+          if (/.+@.+\..+/.test(value)) return true;
+          return "Le courriel doit être valide.";
+        },
+        max: (v) => v.length < 256 || "Maximum 256 caractères svp",
+        min: (v) => v.length >= 8 || "Minimum 8 caractères svp",
+      },
     };
+  },
+  watch: {
+    courriel() {
+      this.isValide();
+    },
+    password() {
+      this.isValide();
+    },
   },
   mounted() {
     // Keep the success message logic
@@ -21,7 +42,35 @@ export default {
     return { userAuthStore };
   },
   methods: {
-    login() {
+    isPasswordValid() {
+      return this.password.length >= 8 && this.password.length < 256;
+    },
+    isCourrielValide() {
+      const pattern =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return (
+        this.courriel &&
+        pattern.test(this.courriel) &&
+        this.courriel.length < 320
+      );
+    },
+    async isValide() {
+      if (this.isCourrielValide() && this.isPasswordValid()) {
+        this.boolValide = true;
+        this.errorMessage = "";
+      } else {
+        this.boolValide = false;
+        this.errorMessage = "Veuillez remplir tous les champs correctement.";
+      }
+    },
+    async login() {
+      await this.isValide();
+
+      if (!this.boolValide) {
+        console.error("formulaire invalide");
+        return;
+      }
+
       fetch("http://localhost:4208/Labo3_Web_EA_AV/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -64,20 +113,24 @@ export default {
         <!-- Message de succès -->
         <p v-if="successMessage" class="success">{{ successMessage }}</p>
         <v-text-field
+          clearable
           v-model="courriel"
+          :rules="[rules.required, rules.max, rules.emailValid]"
           label="ADRESSE COURRIEL"
           class="fixed-size"
-          required
         ></v-text-field>
         <v-text-field
           v-model="password"
+          :rules="[rules.required, rules.min, rules.max]"
           label="MOT DE PASSE"
           type="password"
           class="fixed-size"
           required
         ></v-text-field>
         <br />
-        <v-btn class="buttons" @click="login">CONNEXION</v-btn>
+        <v-btn class="buttons" :disabled="!boolValide" @click="login"
+          >CONNEXION</v-btn
+        >
         <v-btn class="buttons" @click="goToInscription">S'INSCRIRE</v-btn>
       </v-form>
     </div>
