@@ -141,6 +141,7 @@ switch ($method | $uri) {
     case ($method == 'GET' && preg_match('/\/Labo3_Web_EA_AV\/api\/utilisateurs\/[1-9]/', $uri)):  
         $id = end($segments);
         $utilisateur = $controllerUtilisateur->getUtilisateurById($id);
+        
         echo json_encode($utilisateur);
         break;
 

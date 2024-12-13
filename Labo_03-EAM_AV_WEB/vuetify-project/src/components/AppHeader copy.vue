@@ -1,20 +1,10 @@
-<script setup>
-import { useAppStore } from "@/stores/app"; // Correctly import the store
-import { computed } from "vue";
-
-const store = useAppStore(); // Initialize the Pinia store
-const panierCount = computed(() => store.panier.length); // Reactive count of items in the cart
+<script>
+import { useAppStore } from "@/stores/app";
+const store = useAppStore();
 </script>
 
 <template>
   <header>
-    <v-btn class="text-none" stacked to="/panier">
-      <v-badge :content="panierCount" color="red" class="rounded ma-2">
-        <v-icon icon="mdi-bag-personal-outline"></v-icon>
-      </v-badge>
-
-      <!-- Show simple text if cart is empty -->
-    </v-btn>
     <div id="connexion">
       <router-link to="/connexion"
         ><span class="mdi mdi-account-circle-outline"></span
