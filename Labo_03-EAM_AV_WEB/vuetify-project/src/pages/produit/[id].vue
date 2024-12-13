@@ -7,6 +7,7 @@ const route = useRoute();
 const productDetails = ref(null);
 const productSizes = ref([]);
 const productRealSizes = ref([]);
+const selectedImage = ref(null);
 const store = useAppStore();
 
 console.log(`Récupération des détails pour le produit ID: ${route.params.id}`);
@@ -79,6 +80,11 @@ function addToCart() {
   }
 }
 
+function updateMainImage(imageSrc, index) {
+  productDetails.value.image = imageSrc;
+  selectedImage.value = index; // Enregistre l'index sélectionné
+}
+
 onMounted(async () => {
   fetchProductDetails();
   fetchProductSizes();
@@ -88,27 +94,39 @@ onMounted(async () => {
 <template>
   <v-container class="pa-8" style="color: #ff71ce">
     <div v-if="productDetails" class="d-flex">
-      <!-- Image agrandie à gauche -->
-      <v-img
-        :width="400"
-        :height="450"
-        :src="productDetails.image"
-        class="mr-8"
-      />
+      <!-- Section de gauche pour l'image principale et les petites images -->
+      <div class="d-flex flex-column align-items-start mr-8">
+        <!-- Image agrandie -->
+        <v-img :width="400" :height="450" :src="productDetails.image" />
 
+        <!-- Deux petites images en ligne (horizontalement) -->
+        <div class="d-flex">
+          <v-img
+            :src="productDetails.image"
+            :width="100"
+            :height="120"
+            class="my-0 py-0"
+            :class="{ selected: selectedImage === 0 }"
+            @click="updateMainImage(productDetails.image, 0)"
+          />
+          <v-img
+            :src="productDetails.image"
+            :width="100"
+            :height="120"
+            class="ml-5 my-0 py-0"
+            :class="{ selected: selectedImage === 1 }"
+            @click="updateMainImage(productDetails.image, 1)"
+          />
+        </div>
+      </div>
+
+      <!-- Section de droite pour la description, titre, prix, etc. -->
       <div class="d-flex flex-column justify-start">
-        <!-- Titre avec marge verticale -->
         <h1>{{ productDetails.nom }}</h1>
-
-        <!-- Prix avec marge verticale -->
         <p>{{ productDetails.prix }}</p>
-
-        <!-- Description avec marge verticale -->
         <p class="my-4">{{ productDetails.description }}</p>
 
-        <!-- Tailles disponibles -->
         <h2 class="my-2">Tailles disponibles</h2>
-
         <ul v-if="productRealSizes.length > 0">
           <li
             class="ml-10 my-2"
@@ -118,11 +136,7 @@ onMounted(async () => {
             {{ size.taille }} - Quantité: {{ size.quantity }}
           </li>
         </ul>
-
-        <!-- Message si aucune taille n'est disponible -->
         <p v-else class="my-4">Aucune taille disponible pour ce produit.</p>
-
-        <!-- Bouton Ajouter au panier avec marge verticale -->
         <v-btn class="buttons my-4" @click="addToCart">Ajouter au panier</v-btn>
       </div>
     </div>
@@ -145,5 +159,23 @@ onMounted(async () => {
 .buttons:hover {
   box-shadow: 2px 2px black;
   cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
+}
+
+/* Ajout pour aligner les petites images horizontalement */
+.d-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: start; /* Centrer les images */
+  margin-top: 0px;
+}
+
+.selected {
+  border: 3px solid #ff71ce;
+  box-shadow: 0px 0px 10px #ff71ce;
+  border-radius: 5px;
+}
+
+.v-img {
+  display: block;
 }
 </style>
