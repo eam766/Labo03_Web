@@ -1,5 +1,5 @@
 <script>
-import { useUserAuthStore } from "@/stores/userAuth"; // Import the userAuth store
+import { useUserAuthStore } from "@/stores/userAuth";
 
 export default {
   data() {
@@ -24,7 +24,7 @@ export default {
           return "Le courriel doit être valide.";
         },
         noNumbers: (value) => {
-          const numberRegex = /\d/; // Vérifie si une chaîne contient des chiffres
+          const numberRegex = /\d/;
           return !numberRegex.test(value) || "Seulement des lettres svp";
         },
       },
@@ -32,36 +32,34 @@ export default {
   },
   watch: {
     prenom() {
-      this.isValide(); // Call validation on prenom change
+      this.isValide();
     },
     nom() {
-      this.isValide(); // Call validation on nom change
+      this.isValide();
     },
     courriel() {
-      this.isValide(); // Call validation on courriel change
+      this.isValide();
     },
     password() {
-      this.isValide(); // Call validation on password change
+      this.isValide();
     },
   },
   created() {
-    const utilisateurId = parseInt(this.$route.params.id); // ID from URL
-    const userAuthStore = useUserAuthStore(); // Access Pinia store
-    const loggedInUserId = userAuthStore.user?.id; // Get logged-in user ID
+    const utilisateurId = parseInt(this.$route.params.id);
+    const userAuthStore = useUserAuthStore();
+    const loggedInUserId = userAuthStore.user?.id;
     const loggedInUserEmail = userAuthStore.user?.courriel;
     const emailAdmin = "admin@rich.ricasso";
 
-    // Check if the user is logged in and the IDs match
     if (
       (!loggedInUserId || utilisateurId !== loggedInUserId) &&
       loggedInUserEmail !== emailAdmin
     ) {
       console.error("Unauthorized access: Redirecting to Accueil.");
-      this.$router.push("/"); // Redirect to Accueil if IDs don't match
+      this.$router.push("/");
       return;
     }
 
-    // Fetch user data if the IDs match
     this.fetchUserData(utilisateurId);
   },
   methods: {
@@ -122,16 +120,16 @@ export default {
         })
         .catch((error) => {
           console.error("Erreur :", error);
-          this.$router.push("/"); // Redirect to Accueil on error
+          this.$router.push("/");
         })
         .finally(() => {
           this.isLoading = false;
         });
     },
     logout() {
-      const userAuthStore = useUserAuthStore(); // Access Pinia store
-      userAuthStore.logout(); // Clear userAuth store
-      this.$router.push("/connexion"); // Redirect to Connexion
+      const userAuthStore = useUserAuthStore();
+      userAuthStore.logout();
+      this.$router.push("/connexion");
     },
     update() {
       if (this.isLoading) return;
@@ -139,12 +137,11 @@ export default {
       this.isLoading = true;
       const utilisateurId = this.$route.params.id;
 
-      // Include the password as it is now required
       const dataToUpdate = {
         nom: this.nom,
         prenom: this.prenom,
         courriel: this.courriel,
-        password: this.password, // Password is always included
+        password: this.password,
       };
 
       console.log("Données à mettre à jour : ", dataToUpdate);
@@ -168,7 +165,7 @@ export default {
         .then((data) => {
           if (data.success) {
             alert("Profil mis à jour avec succès !");
-            this.fetchUserData(utilisateurId); // Refresh user data
+            this.fetchUserData(utilisateurId);
           } else {
             alert("Échec de la mise à jour.");
           }
