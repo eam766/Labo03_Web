@@ -141,7 +141,7 @@ export default {
         } else {
           this.errorMessage = result.message || "Une erreur est survenue.";
         }
-      } catch (error) {
+      } catch {
         this.errorMessage = "Erreur de connexion au serveur.";
       }
     },
@@ -165,6 +165,7 @@ export default {
                 hint="Votre prénom"
                 label="Entrer votre prénom"
                 name="prenom"
+                class="fixed-size"
               ></v-text-field>
             </v-col>
 
@@ -177,6 +178,7 @@ export default {
                 hint="Votre Nom"
                 label="Entrer votre nom"
                 name="nom"
+                class="fixed-size"
               ></v-text-field>
             </v-col>
 
@@ -191,6 +193,7 @@ export default {
                 hint="Votre mot de passe de 8 caractères minimum."
                 label="Choose a password"
                 name="password"
+                class="fixed-size"
                 @click:append="show1 = !show1"
               ></v-text-field>
             </v-col>
@@ -218,9 +221,8 @@ export default {
             <v-col cols="12" md="8" class="text-center">
               <v-btn
                 variant="outlined"
-                class="mt-4"
+                class="mt-4 button"
                 type="submit"
-                color="primary"
                 :disabled="!boolValide"
                 @click="submitForm"
               >
@@ -240,11 +242,11 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 10px solid transparent;
-  border-image: url(/src/img/web/pale_glowing_pink_blue_border.png) 30% stretch;
-  height: auto;
-  width: 70%;
-  padding: 20px;
+  border-width: 100px;
+  border-image: url(/src/img/web/pale_glowing_pink_blue_border.png) 25% stretch;
+  border-style: solid;
+  height: 700px;
+  width: 700px;
 }
 
 #titre {
@@ -258,24 +260,6 @@ export default {
   text-shadow: 3px 4px 0 #b967ff;
 }
 
-#mdp,
-#email,
-#prenom,
-#nomDeFamille {
-  height: 30px;
-  width: 300px;
-  padding-left: 10px;
-  margin: 13px;
-}
-
-input:hover {
-  cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
-}
-
-input {
-  background-color: white;
-}
-
 .error {
   margin: 0px;
   padding: 0px;
@@ -284,10 +268,9 @@ input {
   margin-left: 15px;
 }
 
-#buttonInscription,
-#buttonConnexion {
+.button {
   height: 34px;
-  width: 100px;
+  width: 150px;
   margin-left: 10px;
   margin-top: 15px;
   background-color: #b967ff;
@@ -298,10 +281,14 @@ input {
   color: black;
 }
 
-#buttonInscription:hover,
-#buttonConnexion:hover {
+.button:hover {
   box-shadow: 2px 2px black;
   cursor: url(/src/img/web/purple_unicorn_neon.png), auto;
+}
+
+.fixed-size {
+  width: 100%; /* Ensures full width in the column */
+  max-width: 300px; /* Restricts to 300px */
 }
 
 .container {

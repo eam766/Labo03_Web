@@ -126,7 +126,6 @@ export default {
           :rules="[rules.required, rules.min, rules.max]"
           :type="show1 ? 'text' : 'password'"
           label="MOT DE PASSE"
-          type="password"
           class="fixed-size"
           required
           @click:append="show1 = !show1"
